@@ -1,18 +1,15 @@
 #!/usr/bin/env bash
-set -u
 
 export MANUALS_DIR="${DOTFILES}/manuals"
 
 if [ $# -eq 0 ]; then
    printf "\n"
-   for a_file in $MANUALS_DIR/*; do
-      echo - $(basename $a_file)
+   for A_FILE in $MANUALS_DIR/*; do
+      echo - $(basename $A_FILE)
    done
    printf "\n"
 elif [ $# -eq 1 ]; then
-   printf "\n"
-   cat $HOME/.manuals/$1
-   printf "\n\n"
+   printf "\n$(cat "${MANUALS_DIR}/${1}")\n\n"
 else
-   echo "innvalid number of arguments"
+   printf "innvalid number of arguments"
 fi

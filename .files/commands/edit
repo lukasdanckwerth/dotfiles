@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-echo "no: $#"
-echo "all: ${*}"
-
 # receive target to edit
 if [ $# -eq 0 ] ; then
    TARGET_PATH="${DOTFILES}"
