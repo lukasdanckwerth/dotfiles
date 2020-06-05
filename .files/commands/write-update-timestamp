@@ -1,0 +1,6 @@
+#!/bin/bash
+
+TIMESTAMP_PATH="${DOTFILES}/.lastupdate"
+NEW_TIMESTAMP=$(date +%s)
+
+echo "${NEW_TIMESTAMP}" > "${TIMESTAMP_PATH}"

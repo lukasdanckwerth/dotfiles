@@ -25,6 +25,7 @@ Alternatively you can install **dotfiles** with this [script](https://raw.github
 | ------- | ------------------------------------------------------------ |
 | .bashrc | Basically a softlink to the `.rc` file in the `.files` directory. |
 | .zshrc | Basically a softlink to the `.rc` file in the `.files` directory. |
+| [commands](https://github.com/lukasdanckwerth/dotfiles/tree/master/.files/commands) | Commands that can be invoked with `dotfiles`. |
 
 ## `bin` files
 

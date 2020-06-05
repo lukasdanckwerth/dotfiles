@@ -34,5 +34,8 @@ if foobar_loc="$(type -p "chflags")" ; then
    done
 fi
 
+# write update token
+echo "$(date +%s)" > "${HOME}/.files/.lastupdate"
+
 # exit gracefully
 exit 0

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+TIMESTAMP_PATH="${DOTFILES}/.lastpull"
+NEW_TIMESTAMP=$(date +%s)
+OLD_TIMESTAMP=$(cat "${TIMESTAMP_PATH}")
+UPDATE_INTERVALL=$((24 * 3600))
+
+if [[ $OLD_TIMESTAMP == "" ]] ; then
+   dotfiles update
+   return 0
+fi
+
+INTERVALL="$(($NEW_TIMESTAMP - $OLD_TIMESTAMP))"
+if [ $INTERVALL -lt $UPDATE_INTERVALL ] ; then
+   echo "too early to check for updates..."
+else
+   dotfiles update
+fi

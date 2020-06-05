@@ -1,0 +1,3 @@
+export DOTFILES_LAST_PULL_PATH="${DOTFILES}/.lastpull"
+export DOTFILES_LAST_PULL="$(cat $DOTFILES_LAST_PULL_PATH)"
+export DOTFILES_REPO_URL=https://github.com/lukasdanckwerth/dotfiles.git

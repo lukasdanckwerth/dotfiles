@@ -5,15 +5,17 @@
 # ===------------------------------------------------------------------------===
 
 # environment
-export DOTFILES="$HOME/.files"
+export DOTFILES="${HOME}/.files"
 export OS_NAME=$(uname -s)
-export SHELL_NAME=$(source "$DOTFILES/commands/shell-name")
+export SHELL_NAME=$(source "${DOTFILES}/commands/shell-name")
 
+echo ""
 echo "OS: $OS_NAME"
 echo "SHELL: $SHELL_NAME"
+echo ""
 
 source "${DOTFILES}/.init"
-source "${DOTFILES}/.check-updates"
+source "${DOTFILES}/.update-watcher"
 
 
 # ===------------------------------------------------------------------------===
@@ -47,10 +49,7 @@ cd() {
 # echo "Resulting PATH: ${PATH}"
 # echo "read .bashrc"
 
-
-
 [[ ! "$SHELL_NAME" -eq "bash" ]] || return
-
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
