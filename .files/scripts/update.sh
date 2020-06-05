@@ -18,11 +18,10 @@ else
    echo "repository already existing. skipping initialization"
 fi
 
-# receive latest updates
+# receive latest updates (from master)
 h git fetch
-
-# checkout master (in order the repository is not on master branch)
 h git checkout master
+h git pull
 
 # exit gracefully
 exit 0

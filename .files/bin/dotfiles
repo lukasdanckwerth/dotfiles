@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+LIB_DIR="$DOTFILES/lib"
+if [ $# -eq 0 ]; then
+   
+   echo "LIB_DIR: ${LIB_DIR}"
+
+   for file in $LIB_DIR/*; do
+      echo - $(basename $file)
+   done
+
+   # printf "\n\n"
+   # elif [ $# -eq 1 ]; then
+   #    printf "\n"
+   #    cat $HOME/.manuals/$1
+   #    printf "\n\n"
+   # else
+   #    echo "Invalid number of arguments."
+   # fi
+fi

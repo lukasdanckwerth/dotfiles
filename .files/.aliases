@@ -3,6 +3,10 @@
 # Extend Existing Commands
 # ===-----------------------------------------------------------------------===
 
+alias h="env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git"
+alias dotfilegit="env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git git"
+alias dgit="env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git git"
+
 alias cp='cp -iv'                       # Preferred 'cp' implementation
 alias mv='mv -iv'                       # Preferred 'mv' implementation
 alias mkdir='mkdir -pv'                 # Preferred 'mkdir' implementation
@@ -19,14 +23,21 @@ alias c='clear'
 # Custom Aliases
 # ===-----------------------------------------------------------------------===
 
+# alias to generate a random password
 alias generate-password='openssl rand -base64'
-
 alias accounts='openssl aes-256-cbc -d -a -salt -in $HOME/.accounts'
 alias accounts-edit='openssl aes-256-cbc -d -a -salt -in $HOME/.accounts -out $HOME/.accounts-original && sublime $HOME/.accounts-original'
 alias accounts-encrypt='openssl aes-256-cbc -a -salt -in $HOME/.accounts-original -out $HOME/.accounts && rm -rf $HOME/.accounts-original'
-
-alias downloads='cd $HOME/Downloads'
 alias youtube-download='youtube-dl --add-metadata -x --audio-format mp3 --audio-quality 0'
+
+# ===-----------------------------------------------------------------------===
+#
+# change directory aliases
+# ===-----------------------------------------------------------------------===
+
+if [ -d $HOME/Downloads ]; then
+   alias developer='cd /Users/Lukas/Downloads'
+fi
 
 if [ -d $HOME/Developer ]; then
    alias developer='cd /Users/Lukas/Developer'
@@ -35,15 +46,3 @@ fi
 if [ -d $HOME/Developer/Xcode ]; then
    alias xcode='cd /Users/Lukas/Developer/Xcode'
 fi
-
-WV_HOURS_DIR="$HOME/Dropbox/WinValueHours"
-if [ -d $WV_HOURS_DIR ]; then
-	
-	function winvaluehours() {
-		WV_HOURS_FILE=$(ls -t "${WV_HOURS_DIR}" | grep ".numbers" | head -n 1)
-		echo "Open file: ${WV_HOURS_FILE}"
-		open "${WV_HOURS_DIR}/${WV_HOURS_FILE}"
-	}
-
-fi
-
