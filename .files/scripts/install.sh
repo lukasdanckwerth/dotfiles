@@ -24,7 +24,14 @@ h git checkout master
 
 # hide README.md on Mac
 if ! foobar_loc="$(type -p "chflags")" || [[ -z $foobar_loc ]]; then
-   chflags hidden "${HOME}/README.md"
+   while true; do
+      read -p "Hide the README.md file in Finder?" yn
+      case $yn in
+         [Yy]* ) chflags hidden "${HOME}/README.md"; break ;;
+         [Nn]* ) break ;;
+             * ) break ;;
+      esac
+   done
 fi
 
 # exit gracefully
