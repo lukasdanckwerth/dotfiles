@@ -1,5 +1,5 @@
 # dotfiles
-![Icon](.files/documentation/icon.round.high.png "Icon")
+![Icon](.files/documentation/icon.200.png "Icon")
 
 ## Installation
 
