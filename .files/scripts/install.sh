@@ -23,7 +23,7 @@ h git fetch
 h git checkout master
 
 # hide README.md on Mac
-if ! foobar_loc="$(type -p "chflags")" || [[ -z $foobar_loc ]]; then
+if foobar_loc="$(type -p "chflags")" ; then
    while true; do
       read -p "Hide the README.md file in Finder?" yn
       case $yn in

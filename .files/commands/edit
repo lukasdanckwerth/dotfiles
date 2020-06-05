@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+echo "no: $#"
+echo "all: ${*}"
+
 # receive target to edit
 if [ $# -eq 0 ] ; then
    TARGET_PATH="${DOTFILES}"
@@ -12,7 +15,6 @@ TARGET_PATH=$(source "$DOTFILES/commands/realpath" "${TARGET_PATH}")
 
 # print message aboyt editing
 echo "edit ${TARGET_PATH}" && echo
-
 
 if type -p "sublime" > /dev/null ; then
    sublime "${TARGET_PATH}"

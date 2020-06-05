@@ -4,8 +4,8 @@
 export REPO_URL=https://github.com/lukasdanckwerth/dotfiles.git
 export GIT_WORK_TREE=$HOME
 export GIT_DIR=$HOME/.files.git
-
 export COMMANDS_DIR="${DOTFILES}/commands"
+
 
 # lists all files in the commands directory
 function list_commands() {
@@ -14,13 +14,18 @@ function list_commands() {
    done
 }
 
-# runs the 
+# runs the command passed in the first argument, passes following argument
+# to executing command
 function run_command() {
-   if [ ! -f "$COMMANDS_DIR/${1}" ] ; then
-      echo "error: unknown command '${1}'"
-      exit 0
+   local SEL_COMMAND=${1}
+   shift
+   
+   if [ ! -f "${COMMANDS_DIR}/${SEL_COMMAND}" ] ; then
+      echo "error: unknown command '${SEL_COMMAND}'"
+      exit 1
    else
-      source $COMMANDS_DIR/${*}
+      source $COMMANDS_DIR/$SEL_COMMAND ${*}
+      exit 0
    fi
 }
 
