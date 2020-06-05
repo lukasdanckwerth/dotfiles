@@ -8,6 +8,13 @@ export ZSH="/Users/lukas/.oh-my-zsh"
 
 
 
+# ===------------------------------------------------------------------------===
+#
+# dotfiles
+# ===------------------------------------------------------------------------===
+
+alias h="env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git"
+
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="blinks"
 

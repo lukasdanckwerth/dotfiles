@@ -1,6 +1,4 @@
 # dotfiles
-my.files
-
 ![Icon](.files/documentation/icon.round.low.png "Icon")
 
 ## Installation
@@ -24,7 +22,7 @@ $ chflags hidden $HOME/README.md
 Alternatively you can install dofiles with a script via the following command. **Be careful** always validate a script before execution.
 
 ```shell
-chflags hidden $HOME/README.md
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/lukasdanckwerth/dotfiles/master/.files/scripts/install.sh)"
 ```
 
 ## Directory and File Structure
@@ -32,4 +30,6 @@ chflags hidden $HOME/README.md
 | Name    | About                                                        |
 | ------- | ------------------------------------------------------------ |
 | .bashrc | Basically a softlink to the `.rc` file in the `.files` directory. |
+| .zshrc | Basically a softlink to the `.rc` file in the `.files` directory. |
+
 
