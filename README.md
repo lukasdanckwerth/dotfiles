@@ -18,10 +18,14 @@ $ h git checkout master
 You may want to hide the `README.md` file.
 
 ```shell
-chflags hidden $HOME/README.md
+$ chflags hidden $HOME/README.md
 ```
 
 Alternatively you can install dofiles with a script via the following command. **Be careful** always validate a script before execution.
+
+```shell
+chflags hidden $HOME/README.md
+```
 
 ## Directory and File Structure
 
