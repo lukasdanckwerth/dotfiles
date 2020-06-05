@@ -4,10 +4,13 @@
 # Ensure running the `init` script
 # ===------------------------------------------------------------------------===
 
-# path to the .files installation
+# environment
 export DOTFILES="$HOME/.files"
 
 source "${DOTFILES}/.init"
+source "${DOTFILES}/.check-updates"
+
+
 
 # ===------------------------------------------------------------------------===
 #
@@ -19,6 +22,8 @@ export GREP_OPTIONS='--color=auto' GREP_COLOR='1;32'
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
 export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33'
+
+
 
 
 # ===------------------------------------------------------------------------===
@@ -35,8 +40,17 @@ cd() {
 
 [ -d "$HOME/.gems" ] && export GEM_HOME="$HOME/.gems"
 
-echo "Resulting PATH: ${PATH}"
-echo "read .bashrc"
+# echo "Resulting PATH: ${PATH}"
+# echo "read .bashrc"
+
+OS_NAME=$(uname -s)
+SHELL_NAME=$(source "$DOTFILES/commands/shell-name")
+
+echo "OS: $OS_NAME"
+echo "SHELL: $SHELL_NAME"
+
+[[ ! "$SHELL_NAME" -eq "bash" ]] || return
+
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -52,12 +66,6 @@ echo "read .bashrc"
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 # shopt -s checkwinsize
-
-SHELL_NAME=$(source "$DOTFILES/commands/shell-name")
-
-echo "SHELL_NAME: $SHELL_NAME"
-
-[[ ! "$SHELL_NAME" -eq "bash" ]] || return
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
@@ -109,4 +117,4 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+# export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'

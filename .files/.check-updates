@@ -1,0 +1,4 @@
+
+
+echo "check-updates"
+echo "DOTFILES: ${DOTFILES}"
