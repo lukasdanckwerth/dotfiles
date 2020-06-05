@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -u
+
 COMMANDS_DIR="${DOTFILES}/commands"
 
 if [ $# -eq 0 ]; then
@@ -7,7 +7,7 @@ if [ $# -eq 0 ]; then
       echo - $(basename $a_file)
    done
 elif [ $# -eq 1 ]; then
-   echo "running command: $1"
+   source "$COMMANDS_DIR/$1"
 else
    echo "innvalid number of arguments"
 fi
