@@ -1,11 +1,16 @@
+#!/bin/bash
+
+THE_QUESTION="Do you want to check for updates of dotfiles? [yn] "
+
 while true; do
-   read -p "Do you wish to install this program?" yn
+   if [[ $SHELL_NAME == "bash" ]] ; then 
+      read -p $THE_QUESTION yn
+   else
+      read "?$THE_QUESTION" yn
+   fi
    case $yn in
-      [Yy]* ) make install; break;;
-      [Nn]* ) exit;;
-          * ) echo "Please answer yes or no.";;
+      [Yy]* ) dotfiles update; break ;;
+      [Nn]* ) break ;;
+          * ) echo "Please answer yes or no." ;;
    esac
 done
-
-echo "check-updates"
-echo "DOTFILES: ${DOTFILES}"

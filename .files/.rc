@@ -6,10 +6,14 @@
 
 # environment
 export DOTFILES="$HOME/.files"
+export OS_NAME=$(uname -s)
+export SHELL_NAME=$(source "$DOTFILES/commands/shell-name")
+
+echo "OS: $OS_NAME"
+echo "SHELL: $SHELL_NAME"
 
 source "${DOTFILES}/.init"
 source "${DOTFILES}/.check-updates"
-
 
 
 # ===------------------------------------------------------------------------===
@@ -43,11 +47,7 @@ cd() {
 # echo "Resulting PATH: ${PATH}"
 # echo "read .bashrc"
 
-OS_NAME=$(uname -s)
-SHELL_NAME=$(source "$DOTFILES/commands/shell-name")
 
-echo "OS: $OS_NAME"
-echo "SHELL: $SHELL_NAME"
 
 [[ ! "$SHELL_NAME" -eq "bash" ]] || return
 
