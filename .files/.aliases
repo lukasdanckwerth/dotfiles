@@ -4,9 +4,7 @@
 # GIT CONVENIENCE
 # ===-----------------------------------------------------------------------===
 
-alias h="env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git"
-alias dotfiles-git="env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git git"
-
+alias dotgit="env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git git"
 
 
 # OVERRIDES
@@ -16,8 +14,6 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 alias mkdir='mkdir -pv'
 alias ll='ls -FGlAhp'
-
-
 alias c='clear'
 
 

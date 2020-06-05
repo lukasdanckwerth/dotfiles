@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# WORK_DIR=$(pwd)
+WORK_DIR="/Users/lukas/.dwhelper/raw-mp4"
+OUTPUT_DIR="/Users/lukas/.dwhelper/raw-mov"
+mkdir -p "${OUTPUT_DIR}"
+
+# echo "WORK_DIR: ${WORK_DIR}"
+# echo "OUTPUT_DIR: ${OUTPUT_DIR}"
+
+for FILE_NAME in $(ls "${WORK_DIR}");
+do
+   if [ ${FILE_NAME: -4} == ".mp4" ]; then
+      
+      FILE_PATH="${WORK_DIR}/${FILE_NAME}"
+      
+      OUTPUT_NAME="$(basename "${FILE_NAME}" .mp4).mov"
+      OUTPUT_PATH="${OUTPUT_DIR}/${OUTPUT_NAME}"
+
+      # echo "FILE_PATH: ${FILE_PATH}"
+      # echo "OUTPUT_PATH: ${OUTPUT_PATH}"
+
+      if [ -f "${OUTPUT_PATH}" ]; then
+         echo "file already exits: ${OUTPUT_PATH}"
+      else
+         echo "convert file: ${FILE_NAME}"
+         /usr/local/bin/ffmpeg -hide_banner \
+            -loglevel warning \
+            -i "${FILE_PATH}" \
+            -vcodec h264 \
+            -acodec mp2 \
+            "${OUTPUT_PATH}"
+
+         if [ $? -eq 0 ]; then
+            echo "removing file: ${FILE_PATH}"
+            rm -rf "${FILE_PATH}"
+         else
+            echo "not removing file"
+         fi
+      fi
+
+   else
+      echo "ignoring file: ${FILE_NAME}"
+   fi
+done
+
+exit 0

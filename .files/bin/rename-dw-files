@@ -1,0 +1,45 @@
+#!/usr/bin/swift
+//
+//  main.swift
+//  rename-downloadhelper-files
+//
+//  Created by Lukas Danckwerth on 11.05.20.
+//  Copyright © 2020 Lukas Danckwerth. All rights reserved.
+//
+
+import Foundation
+
+print("run rename-downloadhelper-files")
+
+let path = "/Users/lukas/.dwhelper/raw-downloadhelper"
+let sourceURL = URL(fileURLWithPath: path, isDirectory: true)
+let files = (try? FileManager.default.contentsOfDirectory(at: sourceURL,
+                                                          includingPropertiesForKeys: nil,
+                                                          options: .skipsHiddenFiles)) ?? []
+
+for fileURL in files {
+    
+    guard fileURL.pathExtension.lowercased() == "mp4" else {
+        continue
+    }
+    
+    guard fileURL.lastPathComponent.contains(" ") else {
+        continue
+    }
+    
+    guard fileURL.lastPathComponent.count != 40 else {
+        continue
+    }
+    
+    let newFileURL = sourceURL
+        .appendingPathComponent(UUID().uuidString)
+        .appendingPathExtension("mp4")
+    
+    print(fileURL.path, " --> ", newFileURL.path)
+    
+    do {
+        try FileManager.default.moveItem(at: fileURL, to: newFileURL)
+    } catch {
+        print(error.localizedDescription)
+    }
+}
