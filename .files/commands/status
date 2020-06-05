@@ -1,12 +1,2 @@
 #!/usr/bin/env bash
-
-# url of git repository to clone
-REPO_URL=https://github.com/lukasdanckwerth/dotfiles.git
-
-# allow usage of aliases
-shopt -s expand_aliases
-
-# create an alias to use git with environment variables
-alias h='env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git'
-
-h git status
+git status

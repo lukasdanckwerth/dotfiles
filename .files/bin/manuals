@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 set -u
-MANUALS_DIR="${DOTFILES}/manuals"
+
+export MANUALS_DIR="${DOTFILES}/manuals"
 
 if [ $# -eq 0 ]; then
+   printf "\n"
    for a_file in $MANUALS_DIR/*; do
       echo - $(basename $a_file)
    done
+   printf "\n"
 elif [ $# -eq 1 ]; then
    printf "\n"
    cat $HOME/.manuals/$1

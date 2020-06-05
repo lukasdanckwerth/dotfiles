@@ -1,13 +1,26 @@
 #!/usr/bin/env bash
 
-COMMANDS_DIR="${DOTFILES}/commands"
+# environment variables
+export REPO_URL=https://github.com/lukasdanckwerth/dotfiles.git
+export GIT_WORK_TREE=$HOME
+export GIT_DIR=$HOME/.files.git
 
-if [ $# -eq 0 ]; then
-   for a_file in $COMMANDS_DIR/*; do
-      echo - $(basename $a_file)
+export COMMANDS_DIR="${DOTFILES}/commands"
+
+# lists all files in the commands directory
+function list_commands() {
+   for A_FILE in $COMMANDS_DIR/*; do
+      echo - $(basename $A_FILE)
    done
-elif [ $# -eq 1 ]; then
-   source "$COMMANDS_DIR/$1"
-else
+}
+
+# runs the 
+function run_command() {
    source $COMMANDS_DIR/${*}
+}
+
+if [ $# -eq 0 ] ; then
+   list_commands
+else
+   run_command ${*}
 fi

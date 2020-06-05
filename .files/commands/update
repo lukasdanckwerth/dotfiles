@@ -5,5 +5,5 @@ UPDATE_SCRIPT="${DOTFILES}/scripts/update.sh"
 if [[ -f "${UPDATE_SCRIPT}" ]] ; then
    source "${UPDATE_SCRIPT}"
 else
-   echo "No update script found"
+   echo "no update script found"
 fi
