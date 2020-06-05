@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# ===---------------------------------------------------------------------------------------------------===
+# 
+# Guard file existences
+# ===---------------------------------------------------------------------------------------------------===
+FU_REPOSITORY=$(pwd)
+FU_FORMULA_PATH_FILE=$FU_REPOSITORY/.formulapath
+
+if [ ! -f "$FU_FORMULA_PATH_FILE" ]; then
+	echo "No formula path file at '$FU_FORMULA_PATH_FILE'"; exit 0
+fi
+
+FU_FORMULA_PATH=$(cat $FU_FORMULA_PATH_FILE | xargs)
+
+if [ ! -f "$FU_FORMULA_PATH" ]; then
+    echo "No formula file at '$FU_FORMULA_PATH'"; exit 0
+fi
+
+
+# ===---------------------------------------------------------------------------------------------------===
+# 
+# Print verbose infos
+# ===---------------------------------------------------------------------------------------------------===
+FU_FULL_VERSION_STRING=$(grep -w 'version "[0-9].[0-9].[0-9]"' $FU_FORMULA_PATH)
+FU_OLD_VERSION=${FU_FULL_VERSION_STRING:11:5}
+FU_NEW_VERSION=$(git tag | tail -n1)
+
+if [[ "$FU_OLD_VERSION" == "$FU_NEW_VERSION" ]]; then
+    echo "Formula for version '$FU_NEW_VERSION' already existing"; exit 0
+fi
+
+echo "Formula file path:   $FU_FORMULA_PATH"
+echo "Old version:         $FU_OLD_VERSION"
+echo "New version:         $FU_NEW_VERSION"
+
+
+# ===---------------------------------------------------------------------------------------------------===
+# 
+# Create temporary formula file
+# ===---------------------------------------------------------------------------------------------------===
+FU_TEMP_FILE_PATH=/tmp/formulaupate-$(uuidgen).rb
+sed "s/$FU_OLD_VERSION/$FU_NEW_VERSION/g" "$FU_FORMULA_PATH" > "$FU_TEMP_FILE_PATH"
+echo "Temporary file path: $FU_TEMP_FILE_PATH"
+
+
+# ===---------------------------------------------------------------------------------------------------===
+# 
+# Print created formula
+# ===---------------------------------------------------------------------------------------------------===
+echo; echo; echo
+echo "===---------------------------------------------------------------------------------------------------==="; echo
+grep --color -E "$FU_NEW_VERSION|$" "$FU_TEMP_FILE_PATH"
+echo; echo "===---------------------------------------------------------------------------------------------------==="; echo 
+diff $FU_FORMULA_PATH $FU_TEMP_FILE_PATH
+echo; echo "===---------------------------------------------------------------------------------------------------==="; echo; echo
+
+
+# ===---------------------------------------------------------------------------------------------------===
+# 
+# Ask user to confirm formula update
+# ===---------------------------------------------------------------------------------------------------===
+
+read -n 1 -s -r -p "Please recheck formula. Should we use it?  Press 'q' to quit, any other key to continue..." answer
+echo; echo
+if [[ $answer == "q" ]]; then
+	rm -rf "$FU_TEMP_FILE_PATH"
+	echo "Abort."; exit 0
+fi
+
+cp "$FU_TEMP_FILE_PATH" "$FU_FORMULA_PATH"
+rm -rf "$FU_TEMP_FILE_PATH"
+
+
+FU_HOMEBREW_TAP_PATH=$(dirname "${FU_FORMULA_PATH}")
+FU_FORUMLA_FILE_NAME=$(basename "${FU_FORMULA_PATH}")
+FU_COMMIT_MESSAGE="update $FU_FORUMLA_FILE_NAME: $FU_OLD_VERSION => $FU_NEW_VERSION"
+
+echo "Brew tap project:    $FU_HOMEBREW_TAP_PATH"
+echo "Formula file name:   $FU_FORUMLA_FILE_NAME"
+echo "Commit message:      $FU_COMMIT_MESSAGE"; echo
+
+
+cd "$FU_HOMEBREW_TAP_PATH"
+
+git add $FU_FORUMLA_FILE_NAME
+git commit -m "$FU_COMMIT_MESSAGE"
+git push
+
+
+cd "$FU_REPOSITORY"

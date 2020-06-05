@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Guard file existences
+# ===-----------------------------------------------------------------------------------===
+FU_REPOSITORY=$(pwd)
+FU_FORMULA_PATH_FILE=$FU_REPOSITORY/.formulapath
+
+if [ ! -f "$FU_FORMULA_PATH_FILE" ]; then
+	echo "No formula path file at '$FU_FORMULA_PATH_FILE'"; exit 0
+fi
+
+FU_FORMULA_PATH=$(cat $FU_FORMULA_PATH_FILE | xargs)
+
+if [ ! -f "$FU_FORMULA_PATH" ]; then
+    echo "No formula file at '$FU_FORMULA_PATH'"; exit 0
+fi
+
+sublime "$FU_FORMULA_PATH"

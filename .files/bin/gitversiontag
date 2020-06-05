@@ -1,0 +1,340 @@
+#!/bin/bash
+
+# author: Lukas Danckwerth
+
+
+set -o errexit   # abort on nonzero exitstatus
+set -o nounset   # abort on unbound variable
+set -o pipefail  # don't hide errors within pipes
+
+
+__wd="$(pwd)"
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+__base="$(basename ${__file} .sh)"
+
+
+
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Prints the usage
+# ===-----------------------------------------------------------------------------------===
+usage() {
+	echo -e "usage: gitversiontag [--help] [--dev-branch <dev_branch>]"
+	echo -e "                     [--rel-branch <release_branch>] [--commit]"
+	echo -e "                     [--push] [--force] <command> [<tag>]"
+	echo; echo "FLAGS:"; echo
+	echo -e "   \033[1m-h, --help\033[0m      Print this help text and exit"
+	echo -e "   \033[1m--rel-branch\033[0m    Specify the relase branch of the repository"
+	echo -e "   \033[1m--force\033[0m         Commit or push work first"
+
+	echo; echo "COMMANDS:"; echo
+	echo -e "   \033[1mauto\033[0m            Automatically determinates the next version tag"
+	echo -e "   \033[1mxcode\033[0m           Creates a tag from the bundle and bundle short version"
+	echo -e "   \033[1minit\033[0m            Creates a '0.0.1' tag"
+	echo
+}
+
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Functions
+# ===-----------------------------------------------------------------------------------===
+print_seperator() {
+	echo "===--------------------------------------------------------------------------==="
+}
+
+contains_formulapath_file() {
+	[ -f "${__wd}/.formulapath" ]
+}
+
+contains_podspec_file() {
+	[ -n "$(find ${__wd} -maxdepth 1 -name "*.podspec")" ]
+}
+
+find_podspec_file() {
+	echo "$(find "${__wd}" -maxdepth 1 -name "*.podspec")"
+}
+
+find_podspec_version() {
+	local podspec_file="${1}"
+	local version_grabbed=$(grep -o -e '\.version *= *\"[0-9]\.[0-9]\.[0-9]\"' "${podspec_file}" | xargs)
+	echo "${version_grabbed:11:5}"
+}
+
+update_podspec_file() {
+	local ps_file="${1}"
+	local ps_version="${2}"
+	local new_version="${3}"
+
+	# create temporary podspec file with new version
+	tmp_ps_file=/tmp/podspec_file-$(uuidgen).podspec
+	sed "s/${ps_version}/${new_version}/g" "${ps_file}" > "${tmp_ps_file}"
+
+	# print content with new version highlighted
+	print_seperator; echo
+	grep --color -E "${new_version}|$" "${tmp_ps_file}"
+	print_seperator; echo
+	printf "$(diff "${ps_file}" "${tmp_ps_file}")\n\n"
+	print_seperator; echo
+
+	echo "Please recheck version. Should we use it? Press 'q' to quit, any other key to continue..."
+	read -n 1 -s -r -p "" answer; echo
+	[[ ! $answer == "q" ]] || die "abort"
+
+	rm -rf "${ps_file}"
+	cp "${tmp_ps_file}" "${ps_file}"
+
+	commit_message="update podspec: ${ps_version} => ${new_version}"
+	echo "commit message: ${commit_message}"
+
+	git add "$(basename "${ps_file}")"
+	git commit -m "${commit_message}}"
+	git push
+}
+
+check_podspec_file() {
+	local ps_file="$(find_podspec_file)"
+	[ -n "${ps_file}" ] || return
+
+	local ps_version=$(find_podspec_version "${ps_file}")
+	[ -n "${ps_version}" ] || return
+
+	[[ ! "${gvt_tag}" == "${ps_version}" ]] || return
+
+	echo "Found old podspec version: ${ps_version}"
+	read -n 1 -s -r -p "Update podspec file?  Press 'q' to quit, any other key to continue..." answer; echo
+	[[ ! $answer == "q" ]] || die "abort"
+
+	update_podspec_file "${ps_file}" "${ps_version}" "${gvt_tag}"
+}
+
+git_list_tags() {
+	echo -e "\033[1mExisting tags:\033[0m"; echo; git tag; echo 
+}
+
+xcode_version_tag() {
+	gvt_plist_path="$(find ${__wd} -maxdepth 2 -name "Info.plist" | head -n 1)"    # search Info.plist file in subdirectories
+	[ -n "${gvt_plist_path}" ] || die "Can't find Info.plist"          # check Info.plist path existence
+	echo "Using ${gvt_plist_path}"
+	[ -f "/usr/libexec/PlistBuddy" ] || die "Can't find PlistBuddy"    # check PlistBuddy existence
+	# receive bundle number
+	gvt_bundle_version=$(/usr/libexec/PlistBuddy -c "print :CFBundleVersion" "${gvt_plist_path}")
+	# receive version number
+	gvt_short_version=$(/usr/libexec/PlistBuddy -c "print :CFBundleShortVersionString" "${gvt_plist_path}")
+	# create version string
+	gvt_tag="v${gvt_short_version}-${gvt_bundle_version}"
+}
+
+# Prints the specified message and exits with an error status
+die() {
+	echo "${*}"
+	exit 1
+}
+
+# Guards the existence of at least one argument
+guard_arguments_existence() {
+	[ "${#}" -ne "0" ] || die "No argument given.  Pass '--help' for more informations."
+}
+
+# Checks for an existing git repository at the current working directory
+guard_repository_existence() {
+	! is_repository "${__pwd}" || die "No git repository found in '${__pwd}'"
+}
+
+# Checks for existing tags
+check_existing_tags() {
+	gvt_tag=$(git tag)
+	if [[ ! -z $gvt_tag ]] && [[ ! $GVT_FORCE_INIT == "1" ]]; then
+		echo "Already contains tags.  Pass '--force-init' to force tagging with tag '0.0.1'"
+		echo "Existing tags:"; echo "$gvt_tag"; exit 0
+	fi
+}
+
+# Returns whether the directory at the given path contains a '.git' folder, thus is a git repository
+is_repository() {
+	[ ! -d "${1}/.git" ]
+}
+
+# Returns whether the git repository at the specified path contains uncommited work
+contains_uncommited_work() {
+	! git diff-index --quiet HEAD --
+}
+
+# Returns whether the git repository at the specified path contains unpushed commits
+contains_unpushed_commits() {
+	local gvt_current_branch=$(git rev-parse --abbrev-ref HEAD)
+	[[ ! -z $(git diff origin/${gvt_current_branch}..HEAD) ]]
+}
+
+set_init_version_tag() {
+	gvt_tag="0.0.1"; return 1
+}
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Calculates the next version tag
+# ===-----------------------------------------------------------------------------------===
+function next_version_tag {
+
+	GVT_CURRENT_VERSION=$(git tag | tail -n1)
+	IFS=. read GVT_MAJOR GVT_MINOR GVT_MICRO <<EOF
+${GVT_CURRENT_VERSION##*-}
+EOF
+
+	# check for valid values
+	[ -z ${GVT_MAJOR} ] || set_init_version_tag && return
+	[ -z ${GVT_MINOR} ] || set_init_version_tag && return
+	[ -z ${GVT_MICRO} ] || set_init_version_tag && return
+
+	let "GVT_MICRO=GVT_MICRO+1"
+
+	if [[ "$GVT_MICRO" == "10" ]]; then
+		let "GVT_MINOR=GVT_MINOR+1"
+		GVT_MICRO="0"
+	fi
+
+	if [[ "$GVT_MINOR" == "10" ]]; then
+		let "GVT_MAJOR=GVT_MAJOR+1"
+		GVT_MINOR="0"
+	fi
+
+	gvt_tag="$GVT_MAJOR.$GVT_MINOR.$GVT_MICRO"
+}
+
+
+
+# guard existence of a git repository
+[ -d "${__wd}/.git" ] || die "No git repository found in '${__wd}'"
+
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Parse arguments
+# ===-----------------------------------------------------------------------------------===
+while (( $# > 0 ))
+do
+    opt="$1"
+    shift
+
+    case $opt in
+    --help | -h)
+        usage; exit 0;;
+	--rel-branch)
+		gvt_release_branch="$1"; shift;;
+    --force)
+		gvt_force=1;;
+	--force-init)
+		GVT_FORCE_INIT=1;;
+    *)
+		gvt_option="$opt";;
+   esac
+done
+
+
+
+if [ -z "${gvt_option-}" ]; then
+	usage; exit 0
+elif [ "${gvt_option}" == "auto" ]; then
+	# git_list_tags
+	next_version_tag
+elif [ "${gvt_option}" == "init" ]; then
+	check_existing_tags
+	set_init_version_tag
+elif [ "${gvt_option}" == "xcode" ]; then
+	# git_list_tags
+	xcode_version_tag
+else
+	die "Unknown argument '${gvt_option}'.  Pass '--help' for more information."
+fi
+
+
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Promt user for validation
+# ===-----------------------------------------------------------------------------------===
+
+# print banner with tag
+${__dir}/printbanner "${gvt_tag}" --headline "  Assuming Next Tag:  "
+
+# ask user and wait for input...
+read -n 1 -s -r -p "Press 'q' to quit, any other key to continue..." answer
+
+# guard correct input...
+[[ ! $answer == "q" ]] || die " abort"
+echo -e "\n\n"
+
+
+check_podspec_file && echo "" # <-- fixes a bug
+
+
+# exit 0
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Check for Work in git repository
+# ===-----------------------------------------------------------------------------------===
+if contains_uncommited_work; then
+ 	[ -z "${gvt_force-}" ] && die "Uncommited work.  Pass '--force' to commit first" || gitcommitfast "prepare tag ${gvt_tag}"
+fi
+if contains_unpushed_commits; then
+	[ -z "${gvt_force-}" ] && die "Unpushed work.  Pass '--force' to push first" || git push
+fi
+
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Merge Release Branch
+# ===-----------------------------------------------------------------------------------===
+if [ ! -z "${gvt_release_branch-}" ]; then
+	gvt_current_branch=$(git rev-parse --abbrev-ref HEAD)
+	if [[ "$gvt_release_branch" == "$gvt_current_branch" ]]; then
+		echo -e "\033[1mNOTE:\033[0m  Already on relase branch '$gvt_release_branch'"
+	else
+		git checkout "$gvt_release_branch"
+		git merge "$gvt_current_branch"
+		git push
+	fi
+fi
+
+
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Git tagging
+# ===-----------------------------------------------------------------------------------===
+git tag -a $gvt_tag -m $gvt_tag
+git push origin --tags
+
+
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Checkout default branch
+# ===-----------------------------------------------------------------------------------===
+if [ ! -z "${gvt_release_branch-}" ]; then
+	if [[ ! "$gvt_release_branch" == "$gvt_current_branch" ]]; then
+		git checkout "$gvt_current_branch"
+	fi
+	git branch
+fi
+
+
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Checkout default branch
+# ===-----------------------------------------------------------------------------------===
+
+if contains_formulapath_file; then
+
+	printf "Update formula?  Press 'q' to quit, any other key to continue...\n"
+	read -n 1 -s -r -p "" answer
+	[[ ! $answer == "q" ]] || exit 0
+
+	sh "${__dir}/formulaupdate"
+fi
+
+

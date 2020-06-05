@@ -9,9 +9,17 @@ export COMMANDS_DIR="${DOTFILES}/commands"
 
 # lists all files in the commands directory
 function list_commands() {
+
+   printf "usage: dotfiles <command> [<args>]\n\n"
+   printf "These are the command dotfiles provides:\n\n"
+
    for A_FILE in $COMMANDS_DIR/*; do
-      echo - $(basename $A_FILE)
+      echo "   $(basename $A_FILE)"
    done
+
+   printf "\n"
+   git status
+   printf "\n"
 }
 
 # runs the command passed in the first argument, passes following argument

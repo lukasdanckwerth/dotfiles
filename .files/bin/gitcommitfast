@@ -1,0 +1,137 @@
+#!/bin/bash
+
+# set -o xtrace
+set -o errexit   # abort on nonzero exitstatus
+set -o pipefail  # don't hide errors within pipes
+
+__wd="$(pwd)"
+
+
+
+# ===------------------------------------------------------------------------===
+#
+#
+# Prints Usage
+# ===------------------------------------------------------------------------===
+print_usage() {
+    echo -e "
+usage: gitcommitfast <message> [--help] [--tag] [--formula]
+
+flags:
+
+  \033[1m -h, --help\033[0m   Print this help text and exit
+  \033[1m --tag\033[0m        Hooks a tag creation after pushing
+  \033[1m --formula\033[0m    Hooks a formula update after pushing
+
+"
+}
+
+die() {
+	echo "${*}"
+	exit 0
+}
+
+
+
+# ===------------------------------------------------------------------------===
+#
+#
+# Parse Command Line
+# ===------------------------------------------------------------------------===
+
+while (( $# > 0 ))
+do
+    case ${1} in
+    -h  | --help        ) print_usage;                      exit 0 ;;
+          --tag         ) GCF_HOOK_TAG=1;                    shift ;;
+          --formula     ) GCF_HOOK_FORMULA_UPDATE=1;         shift ;;
+    *                   ) GCF_MESSAGE="$GCF_MESSAGE ${1}";   shift ;;
+   esac
+done
+
+
+# ===------------------------------------------------------------------------===
+# 
+#
+# Precoditions
+# ===------------------------------------------------------------------------===
+
+# guard commit message existene
+[ -n "$GCF_MESSAGE" ] || die "No commit mesage."
+
+# guard git repository existence
+[ -d "${__wd}/.git" ] || [ -f "${__wd}/.git" ] || die "No git repository found."
+
+# guard uncommit work existence
+if git diff-index --quiet HEAD --
+then die "Nothing to commit."; fi
+
+# remove unwanted Finder file
+rm -rf "${__wd}/.DS_Store"
+
+# trim message
+GCF_MESSAGE=$(echo $GCF_MESSAGE | xargs)
+
+# print commit message if script made it till here...
+echo "Commit message: \"${GCF_MESSAGE}\""
+
+
+
+# ===------------------------------------------------------------------------===
+# 
+#
+# Check for existing .commits file
+# ===------------------------------------------------------------------------===
+COMMITS_FILE="${__wd}/.commits"
+if [ -f "${COMMITS_FILE}" ]; then
+	echo "$(date)   ${GCF_MESSAGE}" >> "${COMMITS_FILE}"
+	echo
+	echo "Contents of .commits file:"
+	echo 
+	cat "${COMMITS_FILE}"
+fi
+
+
+
+# ===------------------------------------------------------------------------===
+# 
+#
+# Do Git Stuff
+# ===------------------------------------------------------------------------===
+
+git add .
+git commit -m "$GCF_MESSAGE"
+git push
+
+
+
+# ===------------------------------------------------------------------------===
+# 
+#
+# Check tag flag
+# ===------------------------------------------------------------------------===
+if [[ $GCF_HOOK_TAG == "1" ]]; then
+	gitversiontag auto
+fi
+
+
+
+# ===------------------------------------------------------------------------===
+# 
+#
+# Check formula update flag
+# ===------------------------------------------------------------------------===
+if [[ $GCF_HOOK_FORMULA_UPDATE == "1" ]]; then
+	formulaupdate
+fi
+
+
+
+if which wh &> /dev/null && [ -f "${__wd}/.workinghours" ]; then
+  wh note "$GCF_MESSAGE"
+fi
+
+
+
+# exit clean
+exit 0

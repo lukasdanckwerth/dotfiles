@@ -1,0 +1,25 @@
+#!/bin/bash
+
+FOLDER=$(pwd)
+
+if [ -f "$FOLDER/.DS_Store" ]; then 
+	rm -rf "$FOLDER/.DS_Store"
+fi
+
+# check for existing `Podfile` first
+if [ -f "$FOLDER/Podfile" ]; then
+	
+	# update cocoapods
+	sudo gem install cocoapods
+
+	# update repositories
+	pod update
+
+	# install pods
+	# pod install
+
+else
+	echo "No Podfile found at '$FOLDER'"
+fi
+
+cd "$FOLDER"

@@ -1,0 +1,99 @@
+#!/bin/bash
+
+# Prints a banner containing the given strings.
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+
+# ===-----------------------------------------------------------------------===
+# 
+# constants
+# ===-----------------------------------------------------------------------===
+readonly PB_TERMINAL_WIDTH=80
+readonly PB_CHAR="-"
+
+
+# ===-----------------------------------------------------------------------===
+# 
+# functions
+# ===-----------------------------------------------------------------------===
+function usage  {
+	echo -e "usage: printbanner <text> [--headline <headline>] [--bold]"; echo
+	echo -e "FLAGS:"; echo
+	echo -e "  \033[1m--headline\033[0m     Specify the headline of the banner"
+	exit 0
+}
+
+
+function print_centered {
+	PBTW=$2
+	PBP="$(printf '%*s' $PBTW "" | tr ' ' "$3")"
+	printf '%*.*s %s %*.*s' 0 "$(((PBTW-2-${#1})/2))" "$PBP" "$1" 0 "$(((PBTW-1-${#1})/2))" "$PBP"
+}
+
+function repeat {
+	printf '%*s' $2 "" | tr ' ' "$1"
+}
+
+function newline {
+	printf "\n"
+}
+
+function print_empty_row {
+	printf "$PB_CHAR"
+	repeat " " "$((PB_TERMINAL_WIDTH-2))"
+	printf "$PB_CHAR"
+}
+
+
+
+# ===-----------------------------------------------------------------------===
+# 
+# handle arguments
+# ===-----------------------------------------------------------------------===
+while (( $# > 0 ))
+do
+    opt="$1"; shift
+    case $opt in
+	--headline)
+		[ ! -z "${1-}" ] || usage
+		PB_HEADLINE="$1"; shift;;
+    *)
+		PB_TEXT="$opt";;
+   esac
+done
+
+
+
+# guard text existence
+[ ! -z "${PB_TEXT-}" ] || usage
+
+
+
+# ===-----------------------------------------------------------------------===
+# 
+# print the banner
+# ===-----------------------------------------------------------------------===
+newline
+
+if [ ! -z "${PB_HEADLINE-}" ]; then
+	print_centered "$PB_HEADLINE" "$PB_TERMINAL_WIDTH" "$PB_CHAR"; newline
+else
+	repeat "${PB_CHAR}" "${PB_TERMINAL_WIDTH}"; newline
+fi
+
+print_empty_row; newline
+print_empty_row; newline
+
+printf "$PB_CHAR"
+print_centered "$PB_TEXT" "$((PB_TERMINAL_WIDTH-2))" " "
+printf "$PB_CHAR"; newline
+
+print_empty_row; newline
+print_empty_row; newline
+repeat "$PB_CHAR" "$PB_TERMINAL_WIDTH"; newline
+newline
+
+

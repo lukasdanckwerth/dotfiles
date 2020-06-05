@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+# Provides some useful functions for working with git.
+
+set -o errexit   # abort on nonzero exitstatus
+set -o nounset   # abort on unbound variable
+set -o pipefail  # don't hide errors within pipes
+
+__pwd="$(pwd)"
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+__base="$(basename ${__file} .sh)"
+
+
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Prints the usage
+# ===-----------------------------------------------------------------------------------===
+function usage {
+	cat <<HELPMSG
+usage: ${__base} <command>
+
+COMMANDS:
+
+   uncommited     Returns 'true' if repository contains uncomitted work, 'false' if not.
+   unpushed       Returns 'true' if repository contains unpushed commits, 'false' if not. 
+
+HELPMSG
+}
+
+
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Functions
+# ===-----------------------------------------------------------------------------------===
+
+# Prints the specified message and exits with an error status
+die() {
+	echo "${*}"
+	exit 1
+}
+
+# Guards the existence of at least one argument.
+guard_arguments_existence() {
+	[ "${#}" -ne "0" ] || die "No argument given.  Pass '--help' for more informations."
+}
+
+# Checks for an existing git repository at the current working directory.
+guard_repository_existence() {
+	! is_repository "${__pwd}" || die "No git repository found in '${__pwd}'"
+}
+
+# Return whether the directory at the given path contains a '.git' folder, thus is a git repository
+is_repository() {
+	[ ! -d "${1}/.git" ]
+}
+
+# Returns whether the git repository at the specified path contains uncommited work.
+contains_uncommited_work() {
+	! git diff-index --quiet HEAD --
+}
+
+# Returns whether the git repository at the specified path contains unpushed commits.
+contains_unpushed_commits() {
+	[[ ! -z $(git diff origin/master..HEAD) ]]
+}
+
+
+
+# ===-----------------------------------------------------------------------------------===
+# 
+# Options
+# ===-----------------------------------------------------------------------------------===
+guard_arguments_existence "${*}"
+guard_repository_existence
+
+while (( $# > 0 ))
+do
+    opt="${1}"
+    shift
+
+    case $opt in
+    --help | -h)
+        usage;
+        exit 0;;
+	uncommited)
+		contains_uncommited_work && echo "true" || echo "false"
+		exit 0;;
+	unpushed)
+		contains_unpushed_commits && echo "true" || echo "false";
+		break;;
+    *)
+		die "Unknown command: '${opt}'.  Pass '--help' for a list of commands";;
+   esac
+done
+

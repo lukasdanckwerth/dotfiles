@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+
+# Convenient script for fetching updates in git repositories.  If invoked in 
+# in a directory with a git repository this script fetches and pulls updates.
+# If invoked in a directory which subdirectories are git repositories this 
+# script updates all of thes repositories.
+#
+# author: Lukas Danckwerth
+
+
+set -o errexit   # abort on nonzero exitstatus
+set -o nounset   # abort on unbound variable
+set -o pipefail  # don't hide errors within pipes
+
+__wd="$(pwd)"
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+__base="$(basename ${__file} .sh)"
+
+
+# ===-----------------------------------------------------------------------===
+# 
+# Functions
+# ===-----------------------------------------------------------------------===
+die() {
+	echo "${*}"
+	exit 1
+}
+
+find_git_repositories() {
+	echo $(find "${__wd}" -maxdepth 2 -name ".git" -exec dirname {} \;)
+}
+
+contains_repository() {
+	[ -d "${1}/.git" ]
+}
+
+contains_submodules() {
+	[ -f "${1}/.gitmodules" ]
+}
+
+contains_uncommited_work() {
+	! git diff-index --quiet HEAD --
+}
+
+contains_unpushed_commits() {
+	local current_branch=$(git rev-parse --abbrev-ref HEAD)
+	[[ ! -z $(git diff origin/${current_branch}..HEAD) ]]
+}
+
+update_git_submodules() {
+
+	echo "Update submodules?  Press 'q' to quit, any other key to continue..."
+	[[ ! $(read -n 1 -s -r -p "") == "q" ]] || return
+
+	echo "Updating submodules..."
+	git submodule update --recursive --remote
+}
+
+update_git_repository() {
+	local repo_path="${1}"
+	local repo_name=$(basename "${repo_path}")
+
+	echo "Updating: '${repo_name}'..."
+
+	# change into given directory
+	pushd "${repo_path}" > /dev/null
+
+	git fetch
+
+	if contains_uncommited_work; then
+		echo "Skipping merge due to uncomitted work in '${repo_name}'"
+	else
+		git merge
+	fi
+
+	if contains_submodules "${repo_path}"; then
+		update_git_submodules "${repo_path}"
+	fi
+
+	# pop to root directory
+	popd > /dev/null
+}
+
+
+
+# ===-----------------------------------------------------------------------===
+# 
+# Check working directory
+# ===-----------------------------------------------------------------------===
+
+if contains_repository "${__wd}"; then
+
+	repo_path="${__wd}"
+	update_git_repository "${repo_path}"
+
+else
+
+	# check that '__wd' is a directory
+	[ -d "${__wd}" ] || die "Can't find repositor[y|ies] at '${__wd}'"
+
+
+	# guard the existence of git repositories in subdirectories
+	repo_paths=$(find_git_repositories "${__wd}")
+	[ -n "${repo_paths}" ] || die "Can't find repositor[y|ies] at '${__wd}'"
+
+	# print repos and ask user for confirmence
+	printf "\nFollowing repositories whould be updated:\n\n"
+	for repo_path in ${repo_paths}; do
+		echo "$(basename "${repo_path}")"
+	done
+
+	printf "\nPress 'q' to quit, any other key to continue...\n"
+	[[ ! $(read -n 1 -s -r -p "") == "q" ]] || return
+
+	for repo_path in ${repo_paths}
+	do
+
+		echo "repo_path: ${repo_path}" > /dev/null
+		update_git_repository "${repo_path}"
+
+	done
+fi
+
+
+# read -n 1 -s -r -p "Press 'q' to quit, any other key to continue..." answer
+# [[ ! $answer == "q" ]] || die " abort"
+
+
+printf "\nDone\n"
+exit 0
