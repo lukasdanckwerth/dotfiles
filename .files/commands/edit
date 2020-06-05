@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# receive target to edit
+if [ $# -eq 0 ] ; then
+   TARGET_PATH="${DOTFILES}"
+else
+   TARGET_PATH="${1}"
+fi
+
+# make path absolute
+TARGET_PATH=$(source "$DOTFILES/commands/realpath" "${TARGET_PATH}")
+
+# print message aboyt editing
+echo "edit ${TARGET_PATH}" && echo
+
+
+if type -p "sublime" > /dev/null ; then
+   sublime "${TARGET_PATH}"
+elif type -p "atom" > /dev/null ; then
+   atom "${TARGET_PATH}"
+elif type -p "vim" > /dev/null ; then
+   vim "${TARGET_PATH}"
+elif type -p "nano" > /dev/null ; then
+   nano "${TARGET_PATH}"
+else
+   echo "no editor found"
+fi

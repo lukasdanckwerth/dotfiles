@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [[ ! ${1} == /* ]] ; then
+   echo "${PWD}/${1}"
+else
+   echo "${1}"
+fi

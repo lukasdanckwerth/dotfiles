@@ -13,12 +13,6 @@ $ h git fetch
 $ h git checkout master
 ```
 
-You may want to hide the `README.md` file in Finder (Only for Mac).
-
-```shell
-$ chflags hidden $HOME/README.md
-```
-
 Alternatively you can install **dotfiles** with this [script](https://raw.githubusercontent.com/lukasdanckwerth/dotfiles/master/.files/scripts/install.sh) via the following command. **Be careful** always validate a script before execution.
 
 ```shell
@@ -32,4 +26,10 @@ Alternatively you can install **dotfiles** with this [script](https://raw.github
 | .bashrc | Basically a softlink to the `.rc` file in the `.files` directory. |
 | .zshrc | Basically a softlink to the `.rc` file in the `.files` directory. |
 
+## `bin` files
+
+| Name    | About                                                        |
+| ------- | ------------------------------------------------------------ |
+| dotfiles | Organize the `dotfiles` project. |
+| manuals | List and read manuals from the `manuals` directory. |
 
