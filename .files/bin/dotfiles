@@ -5,7 +5,8 @@ export REPO_URL=https://github.com/lukasdanckwerth/dotfiles.git
 export GIT_WORK_TREE=$HOME
 export GIT_DIR=$HOME/.files.git
 export COMMANDS_DIR="${DOTFILES}/commands"
-
+export DOTFILES_LAST_PULL_PATH="${DOTFILES}/.lastpull"
+export DOTFILES_LAST_PULL="$(cat $DOTFILES_LAST_PULL_PATH)"
 
 # lists all files in the commands directory
 function list_commands() {
