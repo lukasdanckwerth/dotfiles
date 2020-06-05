@@ -9,14 +9,8 @@ export DOTFILES="${HOME}/.files"
 export OS_NAME=$(uname -s)
 export SHELL_NAME=$(source "${DOTFILES}/commands/shell-name")
 
-echo ""
-echo "OS: $OS_NAME"
-echo "SHELL: $SHELL_NAME"
-echo ""
-
 source "${DOTFILES}/.init"
 source "${DOTFILES}/.update-watcher"
-
 
 # ===------------------------------------------------------------------------===
 #
@@ -46,8 +40,24 @@ cd() {
 
 [ -d "$HOME/.gems" ] && export GEM_HOME="$HOME/.gems"
 
-# echo "Resulting PATH: ${PATH}"
-# echo "read .bashrc"
+echo '''                     
+      ###### ## ##    ######  #####
+      ##        ##    ##  ## ##
+      ###### ## ##    ######  #### 
+ ###  ##     ## ##    ##         ##
+ ###  ##     ## ##### ###### #####
+
+          OS: $OS_NAME"
+       SHELL: $SHELL_NAME"
+ LAST UPDATE: $(date -r $OLD_TIMESTAMP)
+
+'''
+
+echo ""
+echo ""
+echo ""
+echo "Welcome"
+
 
 [[ ! "$SHELL_NAME" -eq "bash" ]] || return
 
