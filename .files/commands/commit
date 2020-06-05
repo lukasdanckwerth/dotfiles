@@ -9,9 +9,8 @@ shopt -s expand_aliases
 # create an alias to use git with environment variables
 alias h='env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git'
 
-A_MESSAGE="${*}"
-echo "$A_MESSAGE"
-
-# h git add .
-# h git commit -m "$A_MESSAGE"
-
+h git status
+h git add .
+h git commit -m "${*}"
+h git push
+h git status

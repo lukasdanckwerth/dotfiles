@@ -9,5 +9,5 @@ if [ $# -eq 0 ]; then
 elif [ $# -eq 1 ]; then
    source "$COMMANDS_DIR/$1"
 else
-   echo "innvalid number of arguments"
+   source $COMMANDS_DIR/${*}
 fi
