@@ -1,0 +1,5 @@
+[user]
+	name = Lukas Danckwerth
+	email = lukas.danckwerth@gmx.de
+[core]
+	excludesfile = ~/.gitignore_global
