@@ -1,0 +1,19 @@
+1. check README.md
+
+2. archive application
+
+3. git push
+
+4. git merge to stage
+
+	$ git checkout stage
+	$ git merge developement
+
+5. tag commit
+
+	$ git tag -a v1.4 -m 'my version 1.4'
+	$ git push origin --tags
+
+6. go back to developement branch
+
+	$ git checkout developement

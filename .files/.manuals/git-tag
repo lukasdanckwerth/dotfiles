@@ -1,0 +1,8 @@
+// List tags ...
+$ git tag
+
+// Create tag
+$ git tag -a v1.4 -m 'my version 1.4'
+
+// Push (all new) tags to remote server
+$ git push origin --tags
