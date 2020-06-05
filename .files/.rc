@@ -1,69 +1,24 @@
 # ===------------------------------------------------------------------------===
 #
 # Author: Lukas Danckwerth
+# Ensure running the `init` script
 # ===------------------------------------------------------------------------===
 
 # path to the .files installation
 export DOTFILES="$HOME/.files"
-export PATH="$PATH:$DOTFILES/bin"
-source $DOTFILES/.init
-source $DOTFILES/.aliases
 
-
-
-# ===------------------------------------------------------------------------===
-#
-# read additional local alias files
-# ===------------------------------------------------------------------------===
-if [ -f "${HOME}/.zsh_aliases" ]; then
-   source "${HOME}/.zsh_aliases" && echo "--> read ${HOME}/.zsh_aliases"
-fi
-
-if [ -f "${HOME}/.bash_aliases" ]; then
-   source "${HOME}/.bash_aliases" && echo "--> read ${HOME}/.bash_aliases"
-fi
-
-
-
-# ===------------------------------------------------------------------------===
-#
-# add additional `bin` directories to $PATH variable
-# ===------------------------------------------------------------------------===
-if [ -d $HOME/bin ]; then
-   export PATH="$PATH:$HOME/bin"
-fi
-
-if [ -d $DOTFILES/bin ]; then
-   
-fi
-
-
+source "${DOTFILES}/.init"
 
 # ===------------------------------------------------------------------------===
 #
 # Colors
 # ===------------------------------------------------------------------------===
+
 export TERM="xterm-color" 
 export GREP_OPTIONS='--color=auto' GREP_COLOR='1;32'
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
 export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33'
-
-
-
-# ===------------------------------------------------------------------------===
-#
-# fastlane / gem
-# ===------------------------------------------------------------------------===
-
-if [ -d $HOME/.fastlane ]; then
-    export PATH="$HOME/.fastlane/bin:$PATH"
-    echo "--> added $HOME/.fastlane to path variable"
-fi
-
-export GEM_HOME=~/.gems
-export PATH=$PATH:~/.gems/bin
-export PATH="/usr/local/opt/ruby/bin:$PATH"
 
 
 # ===------------------------------------------------------------------------===
@@ -74,13 +29,13 @@ export PATH="/usr/local/opt/ruby/bin:$PATH"
 # Always list directory contents upon 'cd'
 cd() {
    builtin cd "$@"
-   rm -f ".DS_Store"
    clear
    ls -la
-}    
+}
+
+[ -d "$HOME/.gems" ] && export GEM_HOME="$HOME/.gems"
 
 echo "Resulting PATH: ${PATH}"
-
 echo "read .bashrc"
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -97,6 +52,12 @@ echo "read .bashrc"
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 # shopt -s checkwinsize
+
+SHELL_NAME=$(source "$DOTFILES/commands/shell-name")
+
+echo "SHELL_NAME: $SHELL_NAME"
+
+[[ ! "$SHELL_NAME" -eq "bash" ]] || return
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
@@ -129,10 +90,10 @@ unset color_prompt force_color_prompt
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
+   PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+   ;;
 *)
-    ;;
+   ;;
 esac
 
 # enable color support of ls and also add handy aliases
@@ -149,4 +110,3 @@ fi
 
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-

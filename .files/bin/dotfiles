@@ -1,19 +1,13 @@
-#!/usr/bin/env sh
-LIB_DIR="$DOTFILES/lib"
+#!/usr/bin/env bash
+set -u
+COMMANDS_DIR="${DOTFILES}/commands"
+
 if [ $# -eq 0 ]; then
-   
-   echo "LIB_DIR: ${LIB_DIR}"
-
-   for file in $LIB_DIR/*; do
-      echo - $(basename $file)
+   for a_file in $COMMANDS_DIR/*; do
+      echo - $(basename $a_file)
    done
-
-   # printf "\n\n"
-   # elif [ $# -eq 1 ]; then
-   #    printf "\n"
-   #    cat $HOME/.manuals/$1
-   #    printf "\n\n"
-   # else
-   #    echo "Invalid number of arguments."
-   # fi
+elif [ $# -eq 1 ]; then
+   echo "running command: $1"
+else
+   echo "innvalid number of arguments"
 fi

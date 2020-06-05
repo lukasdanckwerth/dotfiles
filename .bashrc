@@ -1,1 +1,1 @@
-./.files.rc
+./.files/.rc

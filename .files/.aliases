@@ -1,19 +1,23 @@
+
 # ===-----------------------------------------------------------------------===
 #
-# Extend Existing Commands
+# GIT CONVENIENCE
 # ===-----------------------------------------------------------------------===
 
 alias h="env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git"
-alias dotfilegit="env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git git"
-alias dgit="env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git git"
+alias dotfiles-git="env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git git"
 
-alias cp='cp -iv'                       # Preferred 'cp' implementation
-alias mv='mv -iv'                       # Preferred 'mv' implementation
-alias mkdir='mkdir -pv'                 # Preferred 'mkdir' implementation
-alias ll='ls -FGlAhp'                   # Preferred 'ls' implementation
 
-alias cd..='cd ../'                     # Go back 1 directory level (for fast typers)
-alias ..='cd ../'                       # Go back 1 directory level
+
+# OVERRIDES
+# ===-----------------------------------------------------------------------===
+
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias mkdir='mkdir -pv'
+alias ll='ls -FGlAhp'
+
+
 alias c='clear'
 
 
@@ -25,24 +29,37 @@ alias c='clear'
 
 # alias to generate a random password
 alias generate-password='openssl rand -base64'
+
 alias accounts='openssl aes-256-cbc -d -a -salt -in $HOME/.accounts'
 alias accounts-edit='openssl aes-256-cbc -d -a -salt -in $HOME/.accounts -out $HOME/.accounts-original && sublime $HOME/.accounts-original'
 alias accounts-encrypt='openssl aes-256-cbc -a -salt -in $HOME/.accounts-original -out $HOME/.accounts && rm -rf $HOME/.accounts-original'
+
 alias youtube-download='youtube-dl --add-metadata -x --audio-format mp3 --audio-quality 0'
 
-# ===-----------------------------------------------------------------------===
-#
+
+
 # change directory aliases
 # ===-----------------------------------------------------------------------===
 
 if [ -d $HOME/Downloads ]; then
-   alias developer='cd /Users/Lukas/Downloads'
+   alias developer='cd $HOME/Downloads'
 fi
 
 if [ -d $HOME/Developer ]; then
-   alias developer='cd /Users/Lukas/Developer'
+   alias developer='cd $HOME/Developer'
 fi
 
 if [ -d $HOME/Developer/Xcode ]; then
-   alias xcode='cd /Users/Lukas/Developer/Xcode'
+   alias xcode='cd $HOME/Developer/Xcode'
+fi
+
+XCODE_DERIVED_DATA_DIR="$HOME/Library/Developer/Xcode/DerivedData"
+if [ -d "${XCODE_DERIVED_DATA_DIR}" ]; then
+   alias removederiveddata='rm -rf ~/Library/Developer/Xcode/DerivedData/'
+   alias rmderiveddata='rm -rf ~/Library/Developer/Xcode/DerivedData/'
+fi
+
+MASTER_STUDIES_DIR="$HOME/Documents/Master Medieninformatik/Semester4"
+if [ -d "${MASTER_STUDIES_DIR}" ]; then
+   alias studies='cd ${MASTER_STUDIES_DIR}'
 fi

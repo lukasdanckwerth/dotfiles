@@ -1,17 +1,15 @@
-#!/usr/bin/env sh 
+#!/usr/bin/env bash
+set -u
+MANUALS_DIR="${DOTFILES}/manuals"
+
 if [ $# -eq 0 ]; then
-   # ls -l $HOME/.manuals
-   printf "\n\n"
-   for file in $HOME/.manuals/*; do
-      echo - $(basename $file)
+   for a_file in $MANUALS_DIR/*; do
+      echo - $(basename $a_file)
    done
-    
+elif [ $# -eq 1 ]; then
+   printf "\n"
+   cat $HOME/.manuals/$1
    printf "\n\n"
-   elif [ $# -eq 1 ]; then
-      printf "\n"
-      cat $HOME/.manuals/$1
-      printf "\n\n"
-   else
-      echo "Invalid number of arguments."
-   fi
+else
+   echo "innvalid number of arguments"
 fi

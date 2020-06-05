@@ -1,0 +1,31 @@
+
+# FUNCTIONS
+# ===------------------------------------------------------------------------===
+
+function extend_aliases() {
+   [ -f "$1" ] && source "$1"
+}
+
+function extend_path() {
+   [ -d "$1" ] && export PATH="$PATH:$1"
+}
+
+# LOAD ALIASES
+# ===------------------------------------------------------------------------===
+
+source "${DOTFILES}/.aliases"
+extend_aliases "${HOME}/.zsh_aliases"
+extend_aliases "${HOME}/.bash_aliases"
+
+# EXTEND $PATH VAR
+# ===------------------------------------------------------------------------===
+
+export PATH="$PATH:$DOTFILES/bin"
+
+extend_path "$HOME/bin"
+extend_path "$HOME/bin"
+extend_path "$HOME/.fastlane/bin"
+extend_path "$HOME/.gems/bin"
+extend_path "/usr/local/opt/ruby/bin"
+
+echo "end of init"

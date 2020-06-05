@@ -22,5 +22,10 @@ h git fetch
 # checkout master (in order the repository is not on master branch)
 h git checkout master
 
+# hide README.md on Mac
+if ! foobar_loc="$(type -p "chflags")" || [[ -z $foobar_loc ]]; then
+   chflags hidden "${HOME}/README.md"
+fi
+
 # exit gracefully
 exit 0

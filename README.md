@@ -1,25 +1,25 @@
 # dotfiles
-![Icon](.files/documentation/icon.square.high.png "Icon")
+![Icon](.files/documentation/icon.round.high.png "Icon")
 
 ## Installation
 
-Cloning this repository to your home directory. **Note** that any existing files will be overriden.
+Cloning this repository to your home directory.
 
 ```shell script
 $ alias h='env GIT_WORK_TREE=$HOME GIT_DIR=$HOME/.files.git'
-$ h git ini
+$ h git init
 $ h git remote add origin https://github.com/lukasdanckwerth/dotfiles.git
 $ h git fetch
 $ h git checkout master
 ```
 
-You may want to hide the `README.md` file.
+You may want to hide the `README.md` file in Finder (Only for Mac).
 
 ```shell
 $ chflags hidden $HOME/README.md
 ```
 
-Alternatively you can install dofiles with this [script](https://raw.githubusercontent.com/lukasdanckwerth/dotfiles/master/.files/scripts/install.sh) via the following command. **Be careful** always validate a script before execution.
+Alternatively you can install **dotfiles** with this [script](https://raw.githubusercontent.com/lukasdanckwerth/dotfiles/master/.files/scripts/install.sh) via the following command. **Be careful** always validate a script before execution.
 
 ```shell
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/lukasdanckwerth/dotfiles/master/.files/scripts/install.sh)"
