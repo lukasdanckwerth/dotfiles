@@ -4,8 +4,10 @@ THE_QUESTION="Do you want to check for updates of dotfiles? [yn] "
 
 while true; do
    if [[ $SHELL_NAME == "bash" ]] ; then 
-      read -p $THE_QUESTION yn
+      echo "Is BASH"
+      read -p "$THE_QUESTION" yn
    else
+      echo "Is ZSH"
       read "?$THE_QUESTION" yn
    fi
    case $yn in
