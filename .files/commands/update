@@ -12,5 +12,8 @@ branch="$(git rev-parse --abbrev-ref HEAD)"
 # pull changes in master branch
 git pull
 
+# print new line
+echo ""
+
 # store date of update
 echo "$(date +%s)" > "${DOTFILES_LAST_PULL_PATH}"

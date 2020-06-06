@@ -9,22 +9,8 @@ export DOTFILES="${HOME}/.files"
 export OS_NAME=$(uname -s)
 export SHELL_NAME=$(source "${DOTFILES}/commands/shell-name")
 
+source "${DOTFILES}/.environment"
 source "${DOTFILES}/.init"
-source "${DOTFILES}/.update-watcher"
-
-# ===------------------------------------------------------------------------===
-#
-# Colors
-# ===------------------------------------------------------------------------===
-
-export TERM="xterm-color" 
-export GREP_OPTIONS='--color=auto' GREP_COLOR='1;32'
-export CLICOLOR=1
-export LSCOLORS=ExFxBxDxCxegedabagacad
-export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33'
-
-
-
 
 # ===------------------------------------------------------------------------===
 #
@@ -40,23 +26,37 @@ cd() {
 
 [ -d "$HOME/.gems" ] && export GEM_HOME="$HOME/.gems"
 
-echo '''                     
+LAST_UPDATE_DATE=$(date -r "${DOTFILES_LAST_PULL_PATH}" +'%F %T')
+
+echo '''
+
       ###### ## ##    ######  #####
       ##        ##    ##  ## ##
       ###### ## ##    ######  #### 
  ###  ##     ## ##    ##         ##
  ###  ##     ## ##### ###### #####
-
-          OS: $OS_NAME"
-       SHELL: $SHELL_NAME"
- LAST UPDATE: $(date -r $OLD_TIMESTAMP)
-
 '''
 
+echo "          OS: $OS_NAME"
+echo "       SHELL: $SHELL_NAME"
+echo "     VERSION: $(dotfiles version)"
+echo " LAST UPDATE: $LAST_UPDATE_DATE"
 echo ""
 echo ""
-echo ""
-echo "Welcome"
+
+
+source "${DOTFILES}/.update-watcher"
+
+# ===------------------------------------------------------------------------===
+#
+# Colors
+# ===------------------------------------------------------------------------===
+
+export TERM="xterm-color" 
+export GREP_OPTIONS='--color=auto' GREP_COLOR='1;32'
+export CLICOLOR=1
+export LSCOLORS=ExFxBxDxCxegedabagacad
+export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33'
 
 
 [[ ! "$SHELL_NAME" -eq "bash" ]] || return
