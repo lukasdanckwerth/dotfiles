@@ -3,8 +3,8 @@
 TIMESTAMP_PATH="${DOTFILES}/.lastpull"
 NEW_TIMESTAMP=$(date +%s)
 OLD_TIMESTAMP=$(cat "${TIMESTAMP_PATH}")
-# UPDATE_INTERVALL=$((24 * 3600))
-UPDATE_INTERVALL=$((50))
+UPDATE_INTERVALL=$((6 * 3600))
+# UPDATE_INTERVALL=$((50))
 
 if [[ $OLD_TIMESTAMP == "" ]] ; then
    dotfiles update

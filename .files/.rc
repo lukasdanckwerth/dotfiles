@@ -59,6 +59,8 @@ export LSCOLORS=ExFxBxDxCxegedabagacad
 export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33'
 
 rm -rf "${HOME}/.DS_Store"
+rm -rf "${HOME}/.zsh_history"
+ls -lA
 
 [[ ! "$SHELL_NAME" -eq "bash" ]] || return
 
