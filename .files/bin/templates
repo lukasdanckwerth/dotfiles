@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# set -o xtrace
+
+set -o errexit   # abort on nonzero exitstatus
+set -o pipefail  # don't hide errors within pipes
+
+TEMPLATES_DIR="${DOTFILES}/templates"
+
+function print_usage {
+   echo '''
+usage: templates <command> source_file [target_file]
+
+   ls     Show available templates
+
+   '''
+}
+
+function list {
+   printf "\nAvailable templates:\n\n"
+   for A_FILE in $TEMPLATES_DIR/*; do
+      echo "   $(basename $A_FILE)"
+   done
+}
+
+if [ $# -eq 0 ] ; then print_usage; exit 0 ; fi
+
+while (( $# > 0 ))
+do
+   case ${1} in
+   ls | list)
+      list
+      exit 0 ;;
+   *)
+      # receive source template path
+      SOURCE_PATH="${TEMPLATES_DIR}/${1}"
+      
+      # handle invalid template file path
+      if [ ! -f "${SOURCE_PATH}" ] ; then
+         echo "Unknown template name: ${1}"
+         exit 0
+      fi
+      
+      # check for a second argument or fallback on same name as template
+      if [[ -z "${2}" ]]; then
+         TARGET_FILE="${1}" # same as input
+      else
+         TARGET_FILE="${2}"
+      fi
+
+      # receive absolute path of target file
+      TARGET_PATH="$(dotfiles realpath ${TARGET_FILE})"
+
+      if [ -f "${TARGET_PATH}" ] ; then
+         echo "Target file already existing"
+         exit 0
+      fi
+
+      cp "${SOURCE_PATH}" "${TARGET_PATH}"
+
+      echo "Created file ${TARGET_PATH}"
+      exit 0
+      ;;
+
+   esac
+done
