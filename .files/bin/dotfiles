@@ -9,7 +9,7 @@ export DOTFILES_LAST_PULL_PATH="${DOTFILES}/.lastpull"
 export DOTFILES_LAST_PULL="$(cat $DOTFILES_LAST_PULL_PATH)"
 
 # lists all files in the commands directory
-function list_commands {
+list_commands() {
 
    printf "usage: dotfiles <command> [<args>]\n\n"
    printf "These are the command dotfiles provides:\n\n"
@@ -25,7 +25,7 @@ function list_commands {
 
 # runs the command passed in the first argument, passes following argument
 # to executing command
-function run_command {
+run_command() {
    local SEL_COMMAND=${1}
    shift
    
