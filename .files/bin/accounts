@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# set -o xtrace
+
+# ===-----------------------------------------------------------------------===
+# PARSE ARGUMENTS
+
+set -o errexit   # abort on nonzero exitstatus
+set -o nounset   # abort on unbound variable
+set -o pipefail  # don't hide errors within pipes
+
+# ===-----------------------------------------------------------------------===
+# CONSTANTS
+
+ACC_FILE_PATH="${HOME}/Documents/.accounts"
+EDIT_ACC_FILE_PATH="/tmp/.accounts-edit"
+
+if [ -f "${EDIT_ACC_FILE_PATH}" ] ; then
+   echo 
+   echo "NOTE: There is a ${EDIT_ACC_FILE_PATH} file existing!"
+   echo
+fi
+
+# ===-----------------------------------------------------------------------===
+# FUNCTIONS
+
+print_usage() {
+    echo -e "
+usage: accounts [<command>] [--help]
+
+  \033[1m edit\033[0m         Edit the .accounts file
+  \033[1m encrypt\033[0m      Encrypt the ${EDIT_ACC_FILE_PATH} file
+
+  \033[1m -h, --help\033[0m   Print this help text and exit
+"
+}
+
+guard_file_existence() {
+   if [ ! -f "${ACC_FILE_PATH}" ] ; then
+      echo "No .documents file existing."
+      exit 0
+   fi
+}
+
+list_contents() {
+   guard_file_existence
+   openssl aes-256-cbc -d -a -salt \
+      -in "${ACC_FILE_PATH}"
+}
+
+edit_contents() {
+   guard_file_existence
+   openssl aes-256-cbc -d -a -salt \
+      -in "${ACC_FILE_PATH}" \
+      -out "${EDIT_ACC_FILE_PATH}"
+   dotfiles edit "${EDIT_ACC_FILE_PATH}"
+}
+
+encrypt_contents() {
+   if [ ! -f "${EDIT_ACC_FILE_PATH}" ] ; then
+      echo "No ${EDIT_ACC_FILE_PATH} file existing."
+      exit 0
+   fi
+   openssl aes-256-cbc -a -salt \
+      -in "${EDIT_ACC_FILE_PATH}" \
+      -out "${ACC_FILE_PATH}"
+   rm -rf "${EDIT_ACC_FILE_PATH}"
+}
+
+
+# ===-----------------------------------------------------------------------===
+# PARSE ARGUMENTS
+
+# if no arguments given decrypt the contents of the .accounts file
+if [ $# -eq 0 ] ; then
+   list_contents
+   exit 0
+fi
+
+case ${1} in
+   -h  | --help ) print_usage ;                      exit 0 ;;
+   edit         ) edit_contents ;                    exit 0 ;;
+   encrypt      ) encrypt_contents ;                 exit 0 ;;
+   *            ) echo "Unknown argument: ${1}" ;    exit 0 ;;
+esac
