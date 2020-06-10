@@ -1,1 +1,1 @@
-.files/.rc
+.bash_profile
