@@ -1,26 +1,25 @@
 # LOAD ALIASES
 # ===------------------------------------------------------------------------===
 
-source "${DOTFILES}/.aliases"
-
 function extend_aliases() {
    [ -f "$1" ] && source "$1"
 }
 
+extend_aliases "${DOTFILES}/.aliases"
 extend_aliases "${HOME}/.zsh_aliases"
 extend_aliases "${HOME}/.bash_aliases"
+
 
 # EXTEND $PATH VAR
 # ===------------------------------------------------------------------------===
 
-export PATH="$PATH:$DOTFILES/bin"
-
-function extend_path() {
+function export_path() {
    [ -d "$1" ] && export PATH="$PATH:$1"
 }
 
-extend_path "$HOME/bin"
-extend_path "$HOME/bin"
-extend_path "$HOME/.fastlane/bin"
-extend_path "$HOME/.gems/bin"
-extend_path "/usr/local/opt/ruby/bin"
+export_path "$PATH:$DOTFILES/bin"
+export_path "$HOME/bin"
+export_path "$HOME/.bin"
+export_path "$HOME/.fastlane/bin"
+export_path "$HOME/.gems/bin"
+export_path "/usr/local/opt/ruby/bin"
