@@ -17,7 +17,7 @@ function export_path() {
    [ -d "$1" ] && export PATH="$PATH:$1"
 }
 
-export_path "$PATH:$DOTFILES/bin"
+export_path "$DOTFILES/bin"
 export_path "$HOME/bin"
 export_path "$HOME/.bin"
 export_path "$HOME/.fastlane/bin"
