@@ -1,3 +1,5 @@
+export OS_NAME=$(uname -s)
+export SHELL_NAME=$(source "${DOTFILES}/commands/shell-name")
 export DOTFILES_REPO_URL=https://github.com/lukasdanckwerth/dotfiles.git
-export DOTFILES_LAST_PULL_PATH="${DOTFILES}/.lastpull"
+export DOTFILES_LAST_PULL_PATH="${DOTFILES}/.files-update"
 export DOTFILES_LAST_PULL="$(cat $DOTFILES_LAST_PULL_PATH)"

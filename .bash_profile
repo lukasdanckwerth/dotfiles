@@ -63,6 +63,6 @@ fi
 # Path to your dotfiles installation.
 export DOTFILES="${HOME}/.files"
 
-if [ -f "${DOTFILES}/.profile" ] ; then
-   source "${DOTFILES}/.profile"
+if [ -f "${DOTFILES}/.files.sh" ] ; then
+   source "${DOTFILES}/.files.sh"
 fi

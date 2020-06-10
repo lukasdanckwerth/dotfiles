@@ -17,7 +17,7 @@ h git init
 h git remote add origin "${REPO_URL}"
 
 # receive latest updates
-h git fetch
+h git fetch 
 
 # checkout master (in order the repository is not on master branch)
 h git checkout master
@@ -35,7 +35,7 @@ if foobar_loc="$(type -p "chflags")" ; then
 fi
 
 # write update token
-echo "$(date +%s)" > "${HOME}/.files/.lastupdate"
+echo "$(date +%s)" > "${HOME}/.files/.files-update"
 
 # exit gracefully
 exit 0

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TIMESTAMP_PATH="${DOTFILES}/.lastpull"
+TIMESTAMP_PATH="${DOTFILES}/.files-update"
 NEW_TIMESTAMP=$(date +%s)
 OLD_TIMESTAMP=$(cat "${TIMESTAMP_PATH}")
 UPDATE_INTERVALL=$((6 * 3600))
