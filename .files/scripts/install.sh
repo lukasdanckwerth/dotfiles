@@ -16,13 +16,13 @@ fi
 # check for existing `.profile` file
 if [ -f "${HOME}/.profile" ] ; then
    echo "making backup of .profile..."
-   mv --interactive "${HOME}/.zshrc" "${HOME}/.pre-dotfiles.profile"
+   mv --interactive "${HOME}/.profile" "${HOME}/.pre-dotfiles.profile"
 fi
 
 # check for existing `.bash_logout` file
 if [ -f "${HOME}/.bash_logout" ] ; then
    echo "making backup of .bash_logout..."
-   mv --interactive "${HOME}/.bashrc" "${HOME}/.pre-dotfiles.bash_logout"
+   mv --interactive "${HOME}/.bash_logout" "${HOME}/.pre-dotfiles.bash_logout"
 fi
 
 # url of git repository to clone
