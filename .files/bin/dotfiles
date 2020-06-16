@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # environment variables
 export REPO_URL=https://github.com/lukasdanckwerth/dotfiles.git
