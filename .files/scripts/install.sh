@@ -37,5 +37,13 @@ fi
 # write update token
 echo "$(date +%s)" > "${HOME}/.files/.files-update"
 
+# source the .files.sh file
+if [ -f "${HOME}/.files/.files.sh" ] ; then
+   source "${HOME}/.files/.files.sh"
+else
+   echo "Invalid .files installation."
+   exit 1
+fi
+
 # exit gracefully
 exit 0
