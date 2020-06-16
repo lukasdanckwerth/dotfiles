@@ -1,6 +1,30 @@
 #!/bin/bash
 set -u
 
+# check for existing `.bashrc` file
+if [ -f "${HOME}/.bashrc" ] ; then
+   echo "making backup of .bashrc..."
+   mv --interactive "${HOME}/.bashrc" "${HOME}/.pre-dotfiles.bashrc"
+fi
+
+# check for existing `.zshrc` file
+if [ -f "${HOME}/.zshrc" ] ; then
+   echo "making backup of .zshrc..."
+   mv --interactive "${HOME}/.zshrc" "${HOME}/.pre-dotfiles.zshrc"
+fi
+
+# check for existing `.profile` file
+if [ -f "${HOME}/.profile" ] ; then
+   echo "making backup of .profile..."
+   mv --interactive "${HOME}/.zshrc" "${HOME}/.pre-dotfiles.profile"
+fi
+
+# check for existing `.bash_logout` file
+if [ -f "${HOME}/.bash_logout" ] ; then
+   echo "making backup of .bash_logout..."
+   mv --interactive "${HOME}/.bashrc" "${HOME}/.pre-dotfiles.bash_logout"
+fi
+
 # url of git repository to clone
 REPO_URL=https://github.com/lukasdanckwerth/dotfiles.git
 
