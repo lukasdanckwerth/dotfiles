@@ -11,3 +11,5 @@ cd() {
 }
 
 [ -d "$HOME/.gems" ] && export GEM_HOME="$HOME/.gems"
+
+[ -f "${HOME}/.DS_Store" ] && rm -rf "${HOME}/.DS_Store"

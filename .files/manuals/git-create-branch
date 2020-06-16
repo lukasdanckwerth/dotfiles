@@ -1,0 +1,7 @@
+
+$ git branch MY_BRANCH
+
+$ git checkout MY_BRANCH
+
+# .. or shorthand:
+$ git checkout -b iss53
