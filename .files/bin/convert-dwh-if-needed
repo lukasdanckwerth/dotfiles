@@ -41,7 +41,7 @@ do
          echo "MY_PATH: ${MY_PATH}"
 
          CONVERT_TOOL="${MY_PATH}/convert-dwh-to-mov"
-         # ${CONVERT_TOOL} "${INPUT_FILE_PATH}" "${OUTPUT_FILE_PATH}"
+         ${CONVERT_TOOL} "${INPUT_FILE_PATH}" "${OUTPUT_FILE_PATH}"
 
          if [ $? -eq 0 ]; then
             echo "removing file: ${INPUT_FILE_PATH}"
@@ -49,7 +49,7 @@ do
          else
             echo "not removing file"
          fi
-
+         
       fi
    else
       echo "ignoring file: ${FILE_NAME}"

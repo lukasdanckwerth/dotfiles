@@ -28,7 +28,7 @@ ffmpeg -y \
    -i "${INPUT_PATH}" \
    -c:v mpeg4 \
    -c:a aac \
-   -f mov \
+   -f mp4 \
    -b:v 4000k \
    -b:a 128k \
    -ac 2 \

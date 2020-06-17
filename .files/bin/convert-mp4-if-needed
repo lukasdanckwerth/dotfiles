@@ -3,61 +3,53 @@
 set -x
 set -u
 
-if [ $# -eq 0 ] ; then
-    echo "no arguments"
-    exit 0
+if [ $# -ne 2 ] ; then
+   echo "no arguments"
+   exit 0
 fi
 
-DW_HELPER_DIR="${1}"
-
-if [ ! -d "${DW_HELPER_DIR}" ] ; then
-    echo "working directory doesnt exist: ${DW_HELPER_DIR}"
-    exit 0
+INPUT_DIR="${1}"
+if [ ! -d "${INPUT_DIR}" ] ; then
+   echo "input file does not exist: ${INPUT_DIR}"
+   exit 0
 fi
 
-WORK_DIR="${DW_HELPER_DIR}/raw-mp4"
-OUTPUT_DIR="${DW_HELPER_DIR}/raw-mov"
+OUTPUT_DIR="${2}"
 
-echo "OUT: ${OUTPUT_DIR}"
+echo "INPUT_DIR: ${INPUT_DIR}"
+echo "OUTPUT_DIR: ${OUTPUT_DIR}"
 
 mkdir -p "${OUTPUT_DIR}"
 
-echo "WORK_DIR: ${WORK_DIR}"
-echo "OUTPUT_DIR: ${OUTPUT_DIR}"
 
-for FILE_NAME in $(ls "${WORK_DIR}");
+for FILE_NAME in $(ls "${INPUT_DIR}");
 do
    if [ ${FILE_NAME: -4} == ".mp4" ]; then
       
-      FILE_PATH="${WORK_DIR}/${FILE_NAME}"
-      
-      OUTPUT_NAME="$(basename "${FILE_NAME}" .mp4).mov"
-      OUTPUT_PATH="${OUTPUT_DIR}/${OUTPUT_NAME}"
+      INPUT_FILE_PATH="${INPUT_DIR}/${FILE_NAME}"
+      OUTPUT_FILE_PATH="${OUTPUT_DIR}/${FILE_NAME}.mov"
 
-      echo "FILE_PATH: ${FILE_PATH}"
-      echo "OUTPUT_PATH: ${OUTPUT_PATH}"
+      echo "INPUT_FILE_PATH: ${INPUT_FILE_PATH}"
+      echo "OUTPUT_FILE_PATH: ${OUTPUT_FILE_PATH}"
 
-      continue
-
-      if [ -f "${OUTPUT_PATH}" ]; then
-         echo "file already exits: ${OUTPUT_PATH}"
+      if [ -f "${OUTPUT_FILE_PATH}" ]; then
+         echo "skippinf file because it already exist: ${OUTPUT_FILE_PATH}"
       else
-         echo "convert file: ${FILE_NAME}"
-         /usr/local/bin/ffmpeg -hide_banner \
-            -loglevel warning \
-            -i "${FILE_PATH}" \
-            -vcodec h264 \
-            -acodec mp2 \
-            "${OUTPUT_PATH}"
+         echo "convert file: ${INPUT_FILE_PATH}"
+
+         MY_PATH="`dirname \"$0\"`"
+         echo "MY_PATH: ${MY_PATH}"
+
+         CONVERT_TOOL="${MY_PATH}/convert-mp4-to-mov"
+         ${CONVERT_TOOL} "${INPUT_FILE_PATH}" "${OUTPUT_FILE_PATH}"
 
          if [ $? -eq 0 ]; then
-            echo "removing file: ${FILE_PATH}"
-            rm -rf "${FILE_PATH}"
+            echo "removing file: ${INPUT_FILE_PATH}"
+            # rm -rf "${INPUT_FILE_PATH}"
          else
             echo "not removing file"
-         fi
+         fi 
       fi
-
    else
       echo "ignoring file: ${FILE_NAME}"
    fi
