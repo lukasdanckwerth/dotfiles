@@ -5,9 +5,9 @@
 
 set -o errexit   # abort on nonzero exitstatus
 
-if [ -d "/home/pi/log" ] ; then
+if [ -d "/home/pi" ] ; then
    log_dir="/home/pi/log"
-elif [ -d "/Users/lukas/log" ] ; then 
+elif [ -d "/Users/lukas" ] ; then 
    log_dir="/Users/lukas/log"
 else
    echo "can't find userhome"
