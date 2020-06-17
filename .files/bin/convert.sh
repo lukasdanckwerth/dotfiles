@@ -4,7 +4,7 @@ set -x
 set -u
 
 if [ $# -eq 0 ] ; then
-   WORK_DIR="/home/pi/harddrive/Space/.dwhelper"
+   WORK_DIR="/srv/.raw"
 else
    WORK_DIR="${1}"
 fi
@@ -18,10 +18,15 @@ DWH_RAW_DIR="${WORK_DIR}/raw-dwh"
 MP4_RAW_DIR="${WORK_DIR}/raw-mp4"
 MOV_RAW_DIR="${WORK_DIR}/raw-mov"
 
-${WORK_DIR}/bin/convert-dwh-if-needed \
+mkdir -p "${DWH_RAW_DIR}"
+mkdir -p "${MP4_RAW_DIR}"
+mkdir -p "${MOV_RAW_DIR}"
+
+/home/pi/.files/bin/convert-dwh-if-needed \
    "${DWH_RAW_DIR}" \
    "${MOV_RAW_DIR}"
 
-${WORK_DIR}/bin/convert-mp4-if-needed \
+/home/pi/.files/bin/convert-mp4-if-needed \
    "${MP4_RAW_DIR}" \
    "${MOV_RAW_DIR}"
+
