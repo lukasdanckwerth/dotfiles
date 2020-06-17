@@ -5,7 +5,15 @@
 
 set -o errexit   # abort on nonzero exitstatus
 
-log_dir="/home/lukas/log"
+if [ -d "/home/pi/log" ] ; then
+   log_dir="/home/pi/log"
+elif [ -d "/Users/lukas/log" ] ; then 
+   log_dir="/Users/lukas/log"
+else
+   echo "can't find userhome"
+   exit 1
+fi
+
 dailylog_file="${log_dir}/daily.log"
 
 # ===-----------------------------------------------------------------------===
