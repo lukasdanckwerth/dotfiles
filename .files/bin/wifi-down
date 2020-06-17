@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+dailylog --label "wifi" "down"
+sudo ifconfig wlan0 down

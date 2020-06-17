@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+dailylog --label "wifi" "up"
+sudo ifconfig wlan0 up
