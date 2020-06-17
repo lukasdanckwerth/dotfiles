@@ -1,12 +1,29 @@
 #!/bin/bash
 
-# WORK_DIR=$(pwd)
-WORK_DIR="/Users/lukas/.dwhelper/raw-mp4"
-OUTPUT_DIR="/Users/lukas/.dwhelper/raw-mov"
+set -x
+set -u
+
+if [ $# -eq 0 ] ; then
+    echo "no arguments"
+    exit 0
+fi
+
+DW_HELPER_DIR="${1}"
+
+if [ ! -d "${DW_HELPER_DIR}" ] ; then
+    echo "working directory doesnt exist: ${DW_HELPER_DIR}"
+    exit 0
+fi
+
+WORK_DIR="${DW_HELPER_DIR}/raw-mp4"
+OUTPUT_DIR="${DW_HELPER_DIR}/raw-mov"
+
+echo "OUT: ${OUTPUT_DIR}"
+
 mkdir -p "${OUTPUT_DIR}"
 
-# echo "WORK_DIR: ${WORK_DIR}"
-# echo "OUTPUT_DIR: ${OUTPUT_DIR}"
+echo "WORK_DIR: ${WORK_DIR}"
+echo "OUTPUT_DIR: ${OUTPUT_DIR}"
 
 for FILE_NAME in $(ls "${WORK_DIR}");
 do
@@ -17,8 +34,10 @@ do
       OUTPUT_NAME="$(basename "${FILE_NAME}" .mp4).mov"
       OUTPUT_PATH="${OUTPUT_DIR}/${OUTPUT_NAME}"
 
-      # echo "FILE_PATH: ${FILE_PATH}"
-      # echo "OUTPUT_PATH: ${OUTPUT_PATH}"
+      echo "FILE_PATH: ${FILE_PATH}"
+      echo "OUTPUT_PATH: ${OUTPUT_PATH}"
+
+      continue
 
       if [ -f "${OUTPUT_PATH}" ]; then
          echo "file already exits: ${OUTPUT_PATH}"

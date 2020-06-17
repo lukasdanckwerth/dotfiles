@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -x
+set -u
+
+if [ $# -nq 2 ] ; then
+    echo "no arguments"
+    exit 0
+fi
+
+INPUT_PATH="${1}"
+if [ ! -f "${INPUT_PATH}" ] ; then
+    echo "input file does not exist: ${INPUT_PATH}"
+    exit 0
+fi
+
+OUTPUT_PATH="${2}"
+if [ -f "${OUTPUT_PATH}" ] ; then
+    echo "output file already existing: ${OUTPUT_PATH}"
+    exit 0
+fi
+
+echo "INPUT_PATH: ${INPUT_PATH}"
+echo "OUTPUT_PATH: ${OUTPUT_PATH}"
+
+ffmpeg \
+   -hide_banner \
+   -i "${FILE_PATH}" \
+   -vcodec h264 \
+   -acodec mp2 \
+   "${OUTPUT_PATH}"
+
+# -loglevel warning \
+
+exit 0

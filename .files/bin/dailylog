@@ -6,8 +6,10 @@
 set -o errexit   # abort on nonzero exitstatus
 
 if [ -d "/home/pi" ] ; then
+   a_username="pi"
    log_dir="/home/pi/log"
 elif [ -d "/Users/lukas" ] ; then 
+   a_username="lukas"
    log_dir="/Users/lukas/log"
 else
    echo "can't find userhome"
@@ -23,13 +25,13 @@ dailylog_file="${log_dir}/daily.log"
 create_dir() {
 	local dir_path="${1}"
 	mkdir -p "${dir_path}"
-	chown lukas:lukas "${dir_path}"
+	chown $a_username:$a_username "${dir_path}"
 }
 
 create_file() {
 	local file_path=${1}
 	[ -f "${file_path}" ] || touch "${file_path}"
-	chown lukas:lukas "${file_path}"
+	chown $a_username:$a_username "${file_path}"
 }
 
 recreate_file() {
@@ -53,19 +55,19 @@ while (( $# > 0 ))
 do
     opt="${1}"; shift
     case $opt in
-    --label | -b)
-        log_label="${1}"; shift ;;
-    --level | -l)
+        --label   | -b)
+                log_label="${1}"; shift ;;
+        --level   | -l)
 		log_level="${1}"; shift ;;
-	--error | -e)
+	--error   | -e)
 		log_level="ERRO" ;;
 	--warning | -w)
 		log_level="WARN" ;;
-	--info | -i)
+	--info    | -i)
 		log_level="INFO" ;;
 	--remove)
 		recreate_file "${dailylog_file}"; exit 0 ;;
-    *)
+        *)
 		log_message="${log_message} ${opt}" ;;
    esac
 done
@@ -85,3 +87,5 @@ log_message="$(date '+%Y%m%d %H:%M:%S.%4N') : $log_message"
 echo "${log_message}"
 echo "${log_message}" >> "${log_dir}/daily.log"
 echo "${log_message}" >> "$(weekly_log_file)"
+
+
