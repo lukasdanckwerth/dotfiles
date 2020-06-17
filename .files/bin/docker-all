@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# set -o xtrace
+
+set -o errexit   # abort on nonzero exitstatus
+set -o nounset   # abort on unbound variable
+set -o pipefail  # don't hide errors within pipes
+
+# ===------------------------------------------------------------------------===
+#
+# Prints Usage
+# ===------------------------------------------------------------------------===
+print_usage() {
+    echo -e "
+usage: docker-all <command> [--help]
+
+Commands:
+
+  \033[1m stop\033[0m          Stops all docker containers
+  \033[1m sp\033[0m            Shorthand for stop
+  \033[1m remove\033[0m        Removes all docker containers
+  \033[1m rm\033[0m            Shorthand for remove
+  \033[1m removeimages\033[0m  Removes all docker images
+  \033[1m rmi\033[0m           Shorthand for removeimages
+
+"
+}
+
+
+# guard the existance of an argument or die
+[ $# -ne 0 ] || (print_usage && exit 0)
+
+
+
+# ===------------------------------------------------------------------------===
+#
+# Parse Command Line
+# ===------------------------------------------------------------------------===
+
+while (( $# > 0 ))
+do
+   case ${1} in
+   stop | sp           ) docker stop $(docker ps -a -q) ;              shift ;;
+   remove | rm         ) docker rm $(docker ps -a -q) ;                shift ;;
+   removeimages | rmi  ) docker rmi $(docker images -a -q) ;           shift ;;
+   -h | --help         ) print_usage ;                                exit 0 ;;
+   *                   ) echo "Unknown argument: ${1}" ;              exit 0 ;;
+   esac
+done
+
+# exit clean
+exit 0
