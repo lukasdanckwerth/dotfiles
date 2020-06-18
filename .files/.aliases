@@ -28,6 +28,7 @@ alias generate-password='openssl rand -base64'
 
 alias youtube-download='youtube-dl --add-metadata -x --audio-format mp3 --audio-quality 0'
 
+alias pi='ssh pi@timemachine'
 
 
 # change directory aliases
