@@ -25,7 +25,7 @@ echo "OUTPUT_PATH: ${OUTPUT_PATH}"
 
 ffmpeg \
    -hide_banner \
-   -i "${FILE_PATH}" \
+   -i "${INPUT_PATH}" \
    -vcodec h264 \
    -acodec mp2 \
    "${OUTPUT_PATH}"
