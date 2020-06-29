@@ -3,7 +3,7 @@
 set -x
 set -u
 
-if [ $# -nq 2 ] ; then
+if [ $# -ne 2 ] ; then
     echo "no arguments"
     exit 0
 fi
@@ -26,10 +26,25 @@ echo "OUTPUT_PATH: ${OUTPUT_PATH}"
 ffmpeg \
    -hide_banner \
    -i "${INPUT_PATH}" \
-   -vcodec h264 \
-   -acodec mp2 \
+   -c:v libx264 \
+   -preset slow \
+   -profile:v high \
+   -crf 18 \
+   -coder 1 \
+   -pix_fmt yuv420p \
+   -movflags +faststart \
+   -g 30 \
+   -bf 2 \
+   -c:a aac \
+   -b:a 384k \
+   -profile:a aac_low \
+   -f mov \
    "${OUTPUT_PATH}"
 
+
+# -vcodec copy \
+# -acodec copy \
 # -loglevel warning \
+# -vcodec h264 \
 
 exit 0
