@@ -30,6 +30,8 @@ alias youtube-download='youtube-dl --add-metadata -x --audio-format mp3 --audio-
 
 alias pi='ssh pi@timemachine'
 
+alias combine-pdfs='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'
+
 
 # change directory aliases
 # ===-----------------------------------------------------------------------===
