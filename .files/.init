@@ -20,6 +20,7 @@ function export_path() {
 export_path "$DOTFILES/bin"
 export_path "$HOME/bin"
 export_path "$HOME/.bin"
+export_path "$HOME/Developer/bin"
 export_path "$HOME/.fastlane/bin"
 export_path "$HOME/.gems/bin"
 export_path "/usr/local/opt/ruby/bin"
