@@ -20,8 +20,8 @@ list_commands() {
    done
 
    printf "\n"
-   git status
-   printf "\n"
+   # git status
+   # printf "\n"
 }
 
 # runs the command passed in the first argument, passes following argument

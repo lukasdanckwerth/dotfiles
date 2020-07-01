@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+SOURCE_DIR="/Volumes/MEDIA/Working"
+TARGET_DIR="/Users/lukas"
+BACKUP_DIR="/Users/lukas/Working-bu"
+
+copy-work \
+   "${SOURCE_DIR}" \
+   "${TARGET_DIR}" \
+   "${BACKUP_DIR}"
