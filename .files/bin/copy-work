@@ -9,6 +9,7 @@ TARGET_DIR="${2}"
 BACKUP_DIR="${3}"
 
 sudo rsync \
+   --verbose \
    --human-readable \
    --itemize-changes \
    --archive \
