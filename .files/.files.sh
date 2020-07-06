@@ -10,8 +10,32 @@ export DOTFILES="${HOME}/.files"
 # Load the environments file.
 source "${DOTFILES}/.environment"
 
-# Load the initialization script.
-source "${DOTFILES}/.init"
+# LOAD ALIASES
+# ===------------------------------------------------------------------------===
+
+function extend_aliases() {
+   [ -f "$1" ] && source "$1"
+}
+
+extend_aliases "${DOTFILES}/.aliases"
+extend_aliases "${HOME}/.zsh_aliases"
+extend_aliases "${HOME}/.bash_aliases"
+
+
+# EXTEND $PATH VAR
+# ===------------------------------------------------------------------------===
+
+function export_path() {
+   [ -d "$1" ] && export PATH="$PATH:$1"
+}
+
+export_path "$DOTFILES/bin"
+export_path "$HOME/bin"
+export_path "$HOME/.bin"
+export_path "$HOME/Developer/bin"
+export_path "$HOME/.fastlane/bin"
+export_path "$HOME/.gems/bin"
+export_path "/usr/local/opt/ruby/bin"
 
 # Load the profile file.
 source "${DOTFILES}/.profile"
