@@ -32,6 +32,8 @@ alias pi='ssh pi@timemachine'
 
 alias combine-pdfs='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'
 
+alias up='docker-compose up --build'
+alias upd='up -d'
 
 # change directory aliases
 # ===-----------------------------------------------------------------------===
