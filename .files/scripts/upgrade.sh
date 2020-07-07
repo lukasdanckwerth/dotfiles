@@ -9,13 +9,16 @@ branch="$(git rev-parse --abbrev-ref HEAD)"
 [[ $branch == "master" ]] || git checkout master
 
 # pull changes in master branch
-git pull
+GIT_RESULT=$(git pull)
 
-# print new line
-echo ""
+# print result
+echo "${GIT_RESULT}"
 
 # store date of update
 echo "$(date +%s)" > "${DOTFILES_LAST_PULL_PATH}"
 
-# (re)source the .files.sh file
-source "${HOME}/.files/.files.sh"
+if [[ ${GIT_RESULT} == "Already up to date." ]] ; then
+   exit 0
+else
+   source "${HOME}/.files/.files.sh"
+fi

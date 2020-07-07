@@ -13,6 +13,6 @@ fi
 
 INTERVALL="$(($NEW_TIMESTAMP - $OLD_TIMESTAMP))"
 if [ $INTERVALL -gt $UPDATE_INTERVALL ] ; then
-   echo "Looking for updates." && echo
+   echo "Looking for updates..."
    dotfiles update
 fi
