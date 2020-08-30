@@ -18,12 +18,25 @@ __base="$(basename ${__file} .sh)"
 
 
 INPUT_PATH=/Users/lukas/Library/Mobile\ Documents/com\~apple\~CloudDocs/Knatterton/Beats
+TARGET_DIR="${HOME}/Music/Beats/Beats (Knatterton)"
+
+if [[ ! -d "${TARGET_DIR}" ]] ; then
+  echo "Create target directory at ${TARGET_DIR}"
+  mkdir -p "${TARGET_DIR}"
+fi
 
 find "${INPUT_PATH}" -name "*.mp3" -print0 | while read -d $'\0' BEAT_PATH
 do
-   echo "-- ${BEAT_PATH}"
-   ln -s "${BEAT_PATH}" .
-done
+   BEAT_NAME=$(basename "${BEAT_PATH}")
+   BEAT_DIR=$(dirname "${BEAT_PATH}")
+   DIR_NAME=$(basename "$(dirname "${BEAT_PATH}")")
+   TARGET_BEAT_DIR="${TARGET_DIR}/${DIR_NAME}"
+
+   if [[ ! -d "${TARGET_BEAT_DIR}" ]] ; then
+     echo "Create link to directory at ${TARGET_BEAT_DIR}"
+     ln -s "${BEAT_DIR}" "${TARGET_BEAT_DIR}"
+   fi
+ done
 
 # exit clean
 exit 0
