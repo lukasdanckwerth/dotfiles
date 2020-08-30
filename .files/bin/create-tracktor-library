@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# set -o xtrace
+
+# ===------------------------------------------------------------------------===
+#
+#
+# Prints Usage
+# ===------------------------------------------------------------------------===
+
+set -o errexit   # abort on nonzero exitstatus
+set -o nounset   # abort on unbound variable
+set -o pipefail  # don't hide errors within pipes
+
+__pwd="$(pwd)"
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+__base="$(basename ${__file} .sh)"
+
+
+INPUT_PATH=/Users/lukas/Library/Mobile\ Documents/com\~apple\~CloudDocs/Knatterton/Beats
+
+find "${INPUT_PATH}" -name "*.mp3" -print0 | while read -d $'\0' BEAT_PATH
+do
+   echo "-- ${BEAT_PATH}"
+   ln -s "${BEAT_PATH}" .
+done
+
+# exit clean
+exit 0
