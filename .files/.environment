@@ -3,3 +3,5 @@ export SHELL_NAME=$(source "${DOTFILES}/commands/shell-name")
 export DOTFILES_REPO_URL=https://github.com/lukasdanckwerth/dotfiles.git
 export DOTFILES_LAST_PULL_PATH="${DOTFILES}/.files-update"
 export DOTFILES_LAST_PULL="$(cat $DOTFILES_LAST_PULL_PATH)"
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
