@@ -40,10 +40,12 @@ alias upd='up -d'
 
 if [ -d $HOME/Downloads ]; then
    alias developer='cd $HOME/Downloads'
+   alias dev='cd $HOME/Downloads'
 fi
 
-if [ -d $HOME/Developer ]; then
-   alias developer='cd $HOME/Developer'
+if [ -d $HOME/Downloads ]; then
+   alias downloads='cd $HOME/Downloads'
+   alias down='cd $HOME/Downloads'
 fi
 
 if [ -d $HOME/Developer/Xcode ]; then
