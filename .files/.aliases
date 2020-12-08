@@ -38,9 +38,9 @@ alias upd='up -d'
 # change directory aliases
 # ===-----------------------------------------------------------------------===
 
-if [ -d $HOME/Downloads ]; then
-   alias developer='cd $HOME/Downloads'
-   alias dev='cd $HOME/Downloads'
+if [ -d $HOME/Developer ]; then
+   alias developer='cd $HOME/Developer'
+   alias dev='cd $HOME/Developer'
 fi
 
 if [ -d $HOME/Downloads ]; then
