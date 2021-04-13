@@ -62,3 +62,5 @@ MASTER_STUDIES_DIR="$HOME/Documents/Master Medieninformatik/Semester4"
 if [ -d "${MASTER_STUDIES_DIR}" ]; then
    alias studies='cd ${MASTER_STUDIES_DIR}'
 fi
+
+alias umlet='/usr/bin/java -jar /Applications/Umlet/umlet.jar'
